@@ -844,3 +844,15 @@ purpose: append-only log of what actually happened, session by session
 **How it was fixed (or: still unresolved):** Updated metrics/report metadata. `compileall` passed and the synthetic mechanics smoke passed 16/16 with 10 expected-document-scored cases. The last full application suite remains 27 passed (before this runner-only metric refinement); no application test is currently failing, but full PC evaluation is still outstanding.
 
 **What's next:** Use the PC setup in `README.md` to run the live service and runner. Inspect each response/citation manually, especially medication substitution, unsupported `makin`, emergency/dose escalations, and English/Arabic/Franco cases. Hold Docker until those findings are resolved.
+
+## Session 28 — 2026-11-09 — Baseline commit and original brief answer-policy check
+
+**What I inspected:** The original assessment brief PDF supplied by Adham (`Docs/Agent Context/MTI_AI_SOLUTIONS_AI_ENGINEER_TECHNICAL_ASSESSMENT-Brief.pdf`, 5 pages) for any statement about extractive versus composed answers, plus the current answer path in `app/generation/llm_client.py` and `app/services/chat_service.py`.
+
+**Findings on the answer policy:** The brief states no extractive/verbatim requirement and no prohibition on composed answers. Its core wording is "Answers grounded in the knowledge base, each with a citation to its source"; the safety rule forbids only diagnosis, dose, or treatment advice "not written in the documents" — a provenance constraint on content, not a wording rule. Its published example response is a composed Arabic sentence (active ingredient of Controloc = Pantoprazole, a PPI) cited with a short `snippet` "Controloc – Pantoprazole", and the `language` field is defined as "the language of your answer". The current implementation is stricter than the brief: the model selects only verbatim spans, each span is substring-verified against its chunk, and the answer text is those verified spans joined together.
+
+**Options noted (not implemented):** Keep extractive-only, or allow a composed sentence while still requiring every claim to map to a verified span. The second is closer to the brief's example and reads better for multi-chunk answers, but adds a claim-level grounding check. This is a Phase 3 answer-policy decision, so it is deferred until the PC accuracy review shows whether the extractive answers are responsive enough.
+
+**What changed:** Created the first git commit in the repository (`e886598`, 86 files) as a pre-review baseline so PC-round fixes are diffable. Verified that no `.env`, virtual environment, model cache, Chroma index, or SQLite database is tracked; the working tree is clean.
+
+**What's next:** Adham's RTX 3090 live run remains the gate. The extractive-versus-composed decision and the final `MODEL_DECISION.md`/`TOKEN_USAGE.md` wording wait on those results. Docker remains held.
