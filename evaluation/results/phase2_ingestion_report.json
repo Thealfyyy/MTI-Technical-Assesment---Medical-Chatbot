@@ -1,0 +1,59 @@
+{
+  "timestamp": "2026-11-08T19:19:32.049449+00:00",
+  "run_type": "full_rebuild",
+  "target_doc_id": null,
+  "total_chunks": 414,
+  "total_documents": 9,
+  "manifest_version": "1.0.0",
+  "storage_path": "F:\\Projects\\MTI Technical Assesment - Medical Chatbot\\data\\chroma",
+  "parse_duration_seconds": 0.517,
+  "embed_duration_seconds": 67.877,
+  "store_duration_seconds": 4.03,
+  "documents": {
+    "KB-01": {
+      "title": "1. أدوية الربو – Asthma / 2. أدوية الانسداد الرئوي المزمن – COPD",
+      "chunk_count": 57,
+      "avg_characters": 305.2
+    },
+    "KB-02": {
+      "title": "1. أدوية قرحة المعدة والحموضة – Peptic Ulcer & GERD / 2. Nausea & Vomiting – الغثيان والقيء",
+      "chunk_count": 51,
+      "avg_characters": 237.8
+    },
+    "KB-03": {
+      "title": "1. Pain & Fever – الألم والحرارة / 2. Headache & Migraine – الصداع",
+      "chunk_count": 47,
+      "avg_characters": 282.6
+    },
+    "KB-04": {
+      "title": "1. أدوية التهاب الحلق واللوز – Pharyngitis & Tonsillitis",
+      "chunk_count": 24,
+      "avg_characters": 266.6
+    },
+    "KB-05": {
+      "title": "1. أدوية الالتهاب الرئوي – Pneumonia",
+      "chunk_count": 26,
+      "avg_characters": 351.2
+    },
+    "KB-06": {
+      "title": "1. أدوية الحساسية – Allergic Diseases / 2. أدوية التهاب الجيوب الأنفية – Sinusitis",
+      "chunk_count": 50,
+      "avg_characters": 368.7
+    },
+    "KB-07": {
+      "title": "2. أدوية السكر – Antidiabetic Drugs",
+      "chunk_count": 40,
+      "avg_characters": 339.7
+    },
+    "KB-08": {
+      "title": "1. أدوية الضغط – Antihypertensive Drugs / 2. أدوية الكوليسترول والدهون – Dyslipidemia",
+      "chunk_count": 64,
+      "avg_characters": 348.8
+    },
+    "KB-09": {
+      "title": "1. أدوية القولون العصبي – Irritable Bowel Syndrome (IBS) / 2. أدوية التهاب المفاصل – Arthritis",
+      "chunk_count": 55,
+      "avg_characters": 300.0
+    }
+  }
+}

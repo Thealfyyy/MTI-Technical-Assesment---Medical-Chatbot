@@ -1,0 +1,1581 @@
+{
+  "timestamp": "2026-11-08T21:23:56.866250+00:00",
+  "total_test_queries": 23,
+  "in_scope_queries": 18,
+  "out_of_scope_queries": 5,
+  "evaluation_methodology": {
+    "fact_scoring": "keyword_proximity_proxy: hit requires (a) chunk from expected_doc_id AND (b) target_drug substring present AND (c) at least one required_evidence keyword present. NOT human gold-label annotation. Full gold-label evaluation deferred to Phase 6 harness.",
+    "threshold_evaluation": "All in-scope and OOS queries routed through retrieve(min_score=0.5). Reports in-scope false rejection and OOS empty-result rejection separately.",
+    "oos_abstention_threshold": 0.5
+  },
+  "dense_only": {
+    "fact_recall_at_1": 0.7222,
+    "fact_recall_at_3": 0.8333,
+    "fact_recall_at_5": 0.8333,
+    "fact_mrr_at_5": 0.7685,
+    "doc_recall_at_1": 0.8889,
+    "doc_recall_at_3": 0.9444,
+    "doc_recall_at_5": 0.9444,
+    "doc_mrr_at_5": 0.9167,
+    "oos_abstention_rate": 0.8,
+    "in_scope_retention_rate": 1.0,
+    "in_scope_rejection_rate": 0.0
+  },
+  "hybrid_retrieval": {
+    "fact_recall_at_1": 0.7222,
+    "fact_recall_at_3": 0.8333,
+    "fact_recall_at_5": 0.8333,
+    "fact_mrr_at_5": 0.7778,
+    "doc_recall_at_1": 1.0,
+    "doc_recall_at_3": 1.0,
+    "doc_recall_at_5": 1.0,
+    "doc_mrr_at_5": 1.0,
+    "oos_abstention_rate": 0.8,
+    "in_scope_retention_rate": 1.0,
+    "in_scope_rejection_rate": 0.0,
+    "by_language": {
+      "en": {
+        "queries": 5,
+        "fact_r1": 3,
+        "fact_r3": 3,
+        "fact_r5": 3,
+        "fact_rr_sum": 3.0,
+        "doc_r1": 5,
+        "doc_r3": 5,
+        "fact_recall_at_1": 0.6,
+        "fact_recall_at_3": 0.6,
+        "fact_recall_at_5": 0.6,
+        "fact_mrr": 0.6,
+        "doc_recall_at_1": 1.0,
+        "doc_recall_at_3": 1.0
+      },
+      "ar": {
+        "queries": 4,
+        "fact_r1": 4,
+        "fact_r3": 4,
+        "fact_r5": 4,
+        "fact_rr_sum": 4.0,
+        "doc_r1": 4,
+        "doc_r3": 4,
+        "fact_recall_at_1": 1.0,
+        "fact_recall_at_3": 1.0,
+        "fact_recall_at_5": 1.0,
+        "fact_mrr": 1.0,
+        "doc_recall_at_1": 1.0,
+        "doc_recall_at_3": 1.0
+      },
+      "ar_dialect": {
+        "queries": 4,
+        "fact_r1": 2,
+        "fact_r3": 4,
+        "fact_r5": 4,
+        "fact_rr_sum": 3.0,
+        "doc_r1": 4,
+        "doc_r3": 4,
+        "fact_recall_at_1": 0.5,
+        "fact_recall_at_3": 1.0,
+        "fact_recall_at_5": 1.0,
+        "fact_mrr": 0.75,
+        "doc_recall_at_1": 1.0,
+        "doc_recall_at_3": 1.0
+      },
+      "franco": {
+        "queries": 2,
+        "fact_r1": 1,
+        "fact_r3": 1,
+        "fact_r5": 1,
+        "fact_rr_sum": 1.0,
+        "doc_r1": 2,
+        "doc_r3": 2,
+        "fact_recall_at_1": 0.5,
+        "fact_recall_at_3": 0.5,
+        "fact_recall_at_5": 0.5,
+        "fact_mrr": 0.5,
+        "doc_recall_at_1": 1.0,
+        "doc_recall_at_3": 1.0
+      },
+      "mixed": {
+        "queries": 3,
+        "fact_r1": 3,
+        "fact_r3": 3,
+        "fact_r5": 3,
+        "fact_rr_sum": 3.0,
+        "doc_r1": 3,
+        "doc_r3": 3,
+        "fact_recall_at_1": 1.0,
+        "fact_recall_at_3": 1.0,
+        "fact_recall_at_5": 1.0,
+        "fact_mrr": 1.0,
+        "doc_recall_at_1": 1.0,
+        "doc_recall_at_3": 1.0
+      }
+    }
+  },
+  "detailed_comparison": {
+    "dense_cases": [
+      {
+        "id": "RET-EN-01",
+        "category": "english_factual",
+        "language": "en",
+        "query": "What is the active ingredient in Cataflam?",
+        "expected_doc_ids": [
+          "KB-03",
+          "KB-09",
+          "KB-04",
+          "KB-06"
+        ],
+        "target_drug": "Diclofenac",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-06",
+          "KB-03",
+          "KB-03"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-06-C039",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 32573.62,
+        "top_citation": {
+          "doc_id": "KB-06",
+          "title": "1. أدوية الحساسية – Allergic Diseases / 2. أدوية التهاب الجيوب الأنفية – Sinusitis",
+          "section": "1. أدوية الحساسية – Allergic Diseases > 4. Analgesics > Indications",
+          "snippet": "تخفيف ألم الوجه والضغط حول الجيوب الأنفية والصداع والحمّى المصاحبة. Trade name: Panadol | Active ingredient: Paracetamol Trade name: Fevadol | Active ingredient: Paracetamol Trade name: Cetal | Active ingredient: Paracetamol Trade name: Paramol | Active ingredient: Paracetamol Tr"
+        }
+      },
+      {
+        "id": "RET-EN-02",
+        "category": "english_factual",
+        "language": "en",
+        "query": "What are the common side effects of salbutamol?",
+        "expected_doc_ids": [
+          "KB-01"
+        ],
+        "target_drug": "Salbutamol",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-09",
+          "KB-09",
+          "KB-03"
+        ],
+        "doc_hit_rank": null,
+        "fact_hit_rank": null,
+        "fact_matched_chunk_id": null,
+        "fact_recall_at_1": 0,
+        "fact_recall_at_3": 0,
+        "fact_recall_at_5": 0,
+        "fact_reciprocal_rank": 0.0,
+        "doc_recall_at_1": 0,
+        "doc_recall_at_3": 0,
+        "latency_ms": 480.51,
+        "top_citation": {
+          "doc_id": "KB-09",
+          "title": "1. أدوية القولون العصبي – Irritable Bowel Syndrome (IBS) / 2. أدوية التهاب المفاصل – Arthritis",
+          "section": "1. أدوية القولون العصبي – Irritable Bowel Syndrome (IBS) > 6. Analgesics > Side Effects",
+          "snippet": "Paracetamol: liver toxicity in overdose. Tramadol: nausea، vomiting، dizziness، drowsiness، constipation. Tramadol ممكن يسبب dependence وrespiratory depression، خصوصًا مع الجرعات العالية أو الجمع مع sedatives."
+        }
+      },
+      {
+        "id": "RET-EN-03",
+        "category": "english_factual",
+        "language": "en",
+        "query": "Is there anything a patient should know about alcohol with Metronidazole?",
+        "expected_doc_ids": [
+          "KB-02"
+        ],
+        "target_drug": "Metronidazole",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-02",
+          "KB-04",
+          "KB-09"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": null,
+        "fact_matched_chunk_id": null,
+        "fact_recall_at_1": 0,
+        "fact_recall_at_3": 0,
+        "fact_recall_at_5": 0,
+        "fact_reciprocal_rank": 0.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 528.62,
+        "top_citation": {
+          "doc_id": "KB-02",
+          "title": "1. أدوية قرحة المعدة والحموضة – Peptic Ulcer & GERD / 2. Nausea & Vomiting – الغثيان والقيء",
+          "section": "1. أدوية قرحة المعدة والحموضة – Peptic Ulcer & GERD > C. Nitroimidazoles > Trade Names & Formulations",
+          "snippet": "الاسم التجاري: Flagyl | Active ingredient: Metronidazole الاسم التجاري: Amrizole | Active ingredient: Metronidazole الاسم التجاري: Metronidazole | Active ingredient: Metronidazole الاسم التجاري: Tinidazole | Active ingredient: Tinidazole"
+        }
+      },
+      {
+        "id": "RET-EN-04",
+        "category": "english_factual",
+        "language": "en",
+        "query": "Contraindications for angiotensin receptor blockers in hypertension?",
+        "expected_doc_ids": [
+          "KB-08"
+        ],
+        "target_drug": "ARBs",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-08",
+          "KB-08",
+          "KB-08"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-08-C008",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 548.98,
+        "top_citation": {
+          "doc_id": "KB-08",
+          "title": "1. أدوية الضغط – Antihypertensive Drugs / 2. أدوية الكوليسترول والدهون – Dyslipidemia",
+          "section": "1. أدوية الضغط – Antihypertensive Drugs > 2. ARBs – Angiotensin II Receptor Blockers > Contraindications",
+          "snippet": "Pregnancy: ممنوعة أثناء الحمل. Bilateral renal artery stenosis: ضيق الشريانين الكلويين. Hyperkalemia: ارتفاع البوتاسيوم بشكل ملحوظ. Severe hypotension: انخفاض ضغط الدم الشديد. Severe hepatic impairment / biliary obstruction: مهم بشكل خاص مع بعض الأدوية مثل Olmesartan حسب الحالة."
+        }
+      },
+      {
+        "id": "RET-EN-05",
+        "category": "english_factual",
+        "language": "en",
+        "query": "What are the contraindications for Oseltamivir in influenza pneumonia?",
+        "expected_doc_ids": [
+          "KB-05"
+        ],
+        "target_drug": "Oseltamivir",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-05",
+          "KB-05",
+          "KB-05"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-05-C021",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 586.58,
+        "top_citation": {
+          "doc_id": "KB-05",
+          "title": "1. أدوية الالتهاب الرئوي – Pneumonia",
+          "section": "10. أدوية الالتهاب الرئوي – Pneumonia > 6. Antivirals > Contraindications",
+          "snippet": "Hypersensitivity to Oseltamivir."
+        }
+      },
+      {
+        "id": "RET-AR-01",
+        "category": "msa_factual",
+        "language": "ar",
+        "query": "ما هي موانع استعمال حاصرات مستقبلات الأنجيوتنسين ARBs؟",
+        "expected_doc_ids": [
+          "KB-08"
+        ],
+        "target_drug": "ARBs",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-08"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-08-C008",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 526.75,
+        "top_citation": {
+          "doc_id": "KB-08",
+          "title": "1. أدوية الضغط – Antihypertensive Drugs / 2. أدوية الكوليسترول والدهون – Dyslipidemia",
+          "section": "1. أدوية الضغط – Antihypertensive Drugs > 2. ARBs – Angiotensin II Receptor Blockers > Contraindications",
+          "snippet": "Pregnancy: ممنوعة أثناء الحمل. Bilateral renal artery stenosis: ضيق الشريانين الكلويين. Hyperkalemia: ارتفاع البوتاسيوم بشكل ملحوظ. Severe hypotension: انخفاض ضغط الدم الشديد. Severe hepatic impairment / biliary obstruction: مهم بشكل خاص مع بعض الأدوية مثل Olmesartan حسب الحالة."
+        }
+      },
+      {
+        "id": "RET-AR-02",
+        "category": "msa_factual",
+        "language": "ar",
+        "query": "ما هي الآثار الجانبية لمركبات البزموت في علاج قرحة المعدة؟",
+        "expected_doc_ids": [
+          "KB-02"
+        ],
+        "target_drug": "Bismuth",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-02",
+          "KB-02",
+          "KB-02"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-02-C020",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 585.13,
+        "top_citation": {
+          "doc_id": "KB-02",
+          "title": "1. أدوية قرحة المعدة والحموضة – Peptic Ulcer & GERD / 2. Nausea & Vomiting – الغثيان والقيء",
+          "section": "1. أدوية قرحة المعدة والحموضة – Peptic Ulcer & GERD > B. Bismuth compounds > Side Effects",
+          "snippet": "Black stool. Black tongue. Constipation. Nausea."
+        }
+      },
+      {
+        "id": "RET-AR-03",
+        "category": "msa_factual",
+        "language": "ar",
+        "query": "ما هي موانع استخدام الباراسيتامول كخافض للحرارة؟",
+        "expected_doc_ids": [
+          "KB-03",
+          "KB-04",
+          "KB-06"
+        ],
+        "target_drug": "Paracetamol",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-06",
+          "KB-04"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-06-C042",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 406.82,
+        "top_citation": {
+          "doc_id": "KB-06",
+          "title": "1. أدوية الحساسية – Allergic Diseases / 2. أدوية التهاب الجيوب الأنفية – Sinusitis",
+          "section": "1. أدوية الحساسية – Allergic Diseases > 4. Analgesics > Contraindications",
+          "snippet": "Paracetamol: Severe hepatic impairment، والحذر في مرضى الكبد. NSAIDs: Active peptic ulcer أو GI bleeding. Severe renal impairment. NSAID hypersensitivity أو Aspirin-sensitive asthma. الحذر في Hypertension وHeart failure وCardiovascular diseases. تجنب الجمع بين أكثر من NSAID في نف"
+        }
+      },
+      {
+        "id": "RET-AR-04",
+        "category": "msa_factual",
+        "language": "ar",
+        "query": "موانع استعمال ميكوفينولات في علاج التهاب المفاصل",
+        "expected_doc_ids": [
+          "KB-09"
+        ],
+        "target_drug": "Mycophenolate",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-09",
+          "KB-09",
+          "KB-09"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-09-C042",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 371.71,
+        "top_citation": {
+          "doc_id": "KB-09",
+          "title": "1. أدوية القولون العصبي – Irritable Bowel Syndrome (IBS) / 2. أدوية التهاب المفاصل – Arthritis",
+          "section": "1. أدوية القولون العصبي – Irritable Bowel Syndrome (IBS) > 3. Conventional DMARDs (csDMARDs) > Contraindications",
+          "snippet": "Mycophenolate: pregnancy؛ يسبب severe fetal harm."
+        }
+      },
+      {
+        "id": "RET-EG-01",
+        "category": "egyptian_dialect",
+        "language": "ar_dialect",
+        "query": "ايه البدائل التجارية لـ Brufen في الصيدلية؟",
+        "expected_doc_ids": [
+          "KB-03",
+          "KB-09",
+          "KB-04",
+          "KB-06"
+        ],
+        "target_drug": "Ibuprofen",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-09",
+          "KB-04",
+          "KB-03"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-09-C031",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 421.43,
+        "top_citation": {
+          "doc_id": "KB-09",
+          "title": "1. أدوية القولون العصبي – Irritable Bowel Syndrome (IBS) / 2. أدوية التهاب المفاصل – Arthritis",
+          "section": "1. أدوية القولون العصبي – Irritable Bowel Syndrome (IBS) > 1. NSAIDs > Trade Names",
+          "snippet": "Trade Name: Brufen | Active Ingredient: Ibuprofen Trade Name: Nurofen | Active Ingredient: Ibuprofen Trade Name: Cataflam | Active Ingredient: Diclofenac potassium Trade Name: Voltaren | Active Ingredient: Diclofenac sodium Trade Name: Olfen | Active Ingredient: Diclofenac Trade"
+        }
+      },
+      {
+        "id": "RET-EG-02",
+        "category": "egyptian_dialect",
+        "language": "ar_dialect",
+        "query": "دوا السكر ميتفورمين ممنوع امتى لمرضى السكر؟",
+        "expected_doc_ids": [
+          "KB-07"
+        ],
+        "target_drug": "Metformin",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-07",
+          "KB-07",
+          "KB-07"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 3,
+        "fact_matched_chunk_id": "KB-07-C002",
+        "fact_recall_at_1": 0,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 0.3333,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 293.92,
+        "top_citation": {
+          "doc_id": "KB-07",
+          "title": "2. أدوية السكر – Antidiabetic Drugs",
+          "section": "2. أدوية السكر – Antidiabetic Drugs > 3. Meglitinides > Contraindications",
+          "snippet": "Type 1 Diabetes. Diabetic Ketoacidosis. Severe hepatic impairment. Hypersensitivity to Repaglinide / Nateglinide. Gemfibrozil with Repaglinide: الجمع بينهما ممنوع بسبب زيادة تركيز Repaglinide وخطر Hypoglycemia."
+        }
+      },
+      {
+        "id": "RET-EG-03",
+        "category": "egyptian_dialect",
+        "language": "ar_dialect",
+        "query": "عندي مغص جامد في القولون ودكتور كتبلي دوسباتالين، ده بيعمل ايه؟",
+        "expected_doc_ids": [
+          "KB-09"
+        ],
+        "target_drug": "Duspatalin",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-09",
+          "KB-02",
+          "KB-09"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-09-C002",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 346.32,
+        "top_citation": {
+          "doc_id": "KB-09",
+          "title": "1. أدوية القولون العصبي – Irritable Bowel Syndrome (IBS) / 2. أدوية التهاب المفاصل – Arthritis",
+          "section": "1. أدوية القولون العصبي – Irritable Bowel Syndrome (IBS) > 1. Antispasmodics > Trade Names",
+          "snippet": "Trade Name: Duspatalin | Active Ingredient: Mebeverine Trade Name: Coloverin | Active Ingredient: Mebeverine Trade Name: Colospasmin Forte | Active Ingredient: Mebeverine Trade Name: Colorelax | Active Ingredient: Mebeverine Trade Name: Mepacolon | Active Ingredient: Mebeverine T"
+        }
+      },
+      {
+        "id": "RET-EG-04",
+        "category": "egyptian_dialect",
+        "language": "ar_dialect",
+        "query": "هو فوار الكوليسترول او أقراص إزيتيميب بتتاخد مع ادوية تانية؟",
+        "expected_doc_ids": [
+          "KB-08"
+        ],
+        "target_drug": "Ezetimibe",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-08",
+          "KB-08",
+          "KB-08"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-08-C038",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 430.14,
+        "top_citation": {
+          "doc_id": "KB-08",
+          "title": "1. أدوية الضغط – Antihypertensive Drugs / 2. أدوية الكوليسترول والدهون – Dyslipidemia",
+          "section": "2. أدوية الكوليسترول والدهون – Dyslipidemia > 2. Ezetimibe",
+          "snippet": "Prescription Only الاستخدام: تقليل امتصاص الكوليسترول من الأمعاء، وتقليل LDL، وغالباً يُستخدم مع Statins أو بمفرده في حالات عدم تحمل Statins."
+        }
+      },
+      {
+        "id": "RET-FR-01",
+        "category": "franco_arabic",
+        "language": "franco",
+        "query": "3andi 7omo2a gamda awy w doctor katably omeprazole, a5do ezay?",
+        "expected_doc_ids": [
+          "KB-02"
+        ],
+        "target_drug": "Omeprazole",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-08",
+          "KB-02",
+          "KB-02"
+        ],
+        "doc_hit_rank": 2,
+        "fact_hit_rank": 2,
+        "fact_matched_chunk_id": "KB-02-C003",
+        "fact_recall_at_1": 0,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 0.5,
+        "doc_recall_at_1": 0,
+        "doc_recall_at_3": 1,
+        "latency_ms": 646.94,
+        "top_citation": {
+          "doc_id": "KB-08",
+          "title": "1. أدوية الضغط – Antihypertensive Drugs / 2. أدوية الكوليسترول والدهون – Dyslipidemia",
+          "section": "1. أدوية الضغط – Antihypertensive Drugs > 6. Loop Diuretics > Indications",
+          "snippet": "علاج احتباس السوائل (Edema). Heart Failure. Pulmonary Edema. بعض حالات ارتفاع ضغط الدم المصاحبة لمشاكل الكلى أو احتباس السوائل."
+        }
+      },
+      {
+        "id": "RET-FR-02",
+        "category": "franco_arabic",
+        "language": "franco",
+        "query": "soda3 w 2alam shadeed fe el-ras, panadol aw brufen a7san?",
+        "expected_doc_ids": [
+          "KB-03"
+        ],
+        "target_drug": "Panadol/Brufen",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-03",
+          "KB-04",
+          "KB-03"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": null,
+        "fact_matched_chunk_id": null,
+        "fact_recall_at_1": 0,
+        "fact_recall_at_3": 0,
+        "fact_recall_at_5": 0,
+        "fact_reciprocal_rank": 0.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 401.16,
+        "top_citation": {
+          "doc_id": "KB-03",
+          "title": "1. Pain & Fever – الألم والحرارة / 2. Headache & Migraine – الصداع",
+          "section": "2. Headache & Migraine – الصداع > 1. Simple Analgesics > Trade Names",
+          "snippet": "Trade Name: Panadol | Active Ingredient: Paracetamol Trade Name: Cetal | Active Ingredient: Paracetamol Trade Name: Adol | Active Ingredient: Paracetamol Trade Name: Paramol | Active Ingredient: Paracetamol Trade Name: Fevadol | Active Ingredient: Paracetamol Trade Name: Abimol |"
+        }
+      },
+      {
+        "id": "RET-MX-01",
+        "category": "mixed_language",
+        "language": "mixed",
+        "query": "عايز أعرف الـ side effects بتاعة الـ Clarithromycin في علاج جرثومة المعدة",
+        "expected_doc_ids": [
+          "KB-02"
+        ],
+        "target_drug": "Clarithromycin",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-02",
+          "KB-05",
+          "KB-02"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-02-C030",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 339.82,
+        "top_citation": {
+          "doc_id": "KB-02",
+          "title": "1. أدوية قرحة المعدة والحموضة – Peptic Ulcer & GERD / 2. Nausea & Vomiting – الغثيان والقيء",
+          "section": "1. أدوية قرحة المعدة والحموضة – Peptic Ulcer & GERD > D. Other antibiotics used in selected regimens > Side Effects",
+          "snippet": "Nausea, vomiting, diarrhea. Abdominal pain. Metallic taste مع Metronidazole. Skin rash. Candidiasis. Clarithromycin: GI upset وQT prolongation. Levofloxacin: tendon injury، peripheral neuropathy، وQT prolongation."
+        }
+      },
+      {
+        "id": "RET-MX-02",
+        "category": "mixed_language",
+        "language": "mixed",
+        "query": "ينفع أستخدم Saline Nasal Irrigation مع أدوية الحساسية ومينفعش أشاركه مع حد؟",
+        "expected_doc_ids": [
+          "KB-06"
+        ],
+        "target_drug": "Saline",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-06",
+          "KB-06",
+          "KB-06"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-06-C034",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 418.56,
+        "top_citation": {
+          "doc_id": "KB-06",
+          "title": "1. أدوية الحساسية – Allergic Diseases / 2. أدوية التهاب الجيوب الأنفية – Sinusitis",
+          "section": "1. أدوية الحساسية – Allergic Diseases > 2. Saline Nasal Irrigation > Contraindications",
+          "snippet": "Hypersensitivity to any added ingredient. الحذر عند وجود complete nasal obstruction أو ألم بالأذن أثناء irrigation. استخدام ماء معقم أو مقطر أو مغلي ثم مبرد عند تحضير محلول الغسيل في المنزل؛ ممنوع استخدام ماء الصنبور مباشرة."
+        }
+      },
+      {
+        "id": "RET-MX-03",
+        "category": "mixed_language",
+        "language": "mixed",
+        "query": "هل الـ SGLT2 Inhibitors زي Forxiga ليها موانع استعمال؟",
+        "expected_doc_ids": [
+          "KB-07"
+        ],
+        "target_drug": "SGLT2",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-07",
+          "KB-07",
+          "KB-07"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-07-C019",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 388.12,
+        "top_citation": {
+          "doc_id": "KB-07",
+          "title": "2. أدوية السكر – Antidiabetic Drugs",
+          "section": "2. أدوية السكر – Antidiabetic Drugs > 5. SGLT2 Inhibitors (Gliflozins) > Contraindications",
+          "snippet": "Type 1 Diabetes: لا تستخدم روتينياً لعلاجه بسبب خطر DKA. Active Diabetic Ketoacidosis. Severe dehydration: الجفاف الشديد. Severe hypersensitivity: حساسية شديدة للمادة الفعالة. Severe renal impairment: قد يمنع الاستخدام أو يقلل فائدته لعلاج السكر حسب eGFR والمنتج، مع اختلاف حدود ا"
+        }
+      },
+      {
+        "id": "RET-OOS-01",
+        "category": "out_of_scope",
+        "language": "en",
+        "query": "What is the recommended dosage of Artemether-Lumefantrine for acute uncomplicated Malaria?",
+        "expected_doc_ids": [],
+        "target_drug": "Artemether-Lumefantrine (Malaria)",
+        "is_out_of_scope": true,
+        "abstention_threshold": 0.5,
+        "abstention_method": "retrieve_returned_empty_list_at_min_score_threshold",
+        "abstained_correctly": true,
+        "chunks_above_threshold": 0,
+        "top_fused_rrf_score": 0.0,
+        "retrieved_doc_ids": [],
+        "latency_ms": 445.0,
+        "top_citation": null
+      },
+      {
+        "id": "RET-OOS-02",
+        "category": "out_of_scope",
+        "language": "en",
+        "query": "Can I use Rabies post-exposure prophylaxis immunoglobulin for a bat bite?",
+        "expected_doc_ids": [],
+        "target_drug": "Rabies Immunoglobulin",
+        "is_out_of_scope": true,
+        "abstention_threshold": 0.5,
+        "abstention_method": "retrieve_returned_empty_list_at_min_score_threshold",
+        "abstained_correctly": true,
+        "chunks_above_threshold": 0,
+        "top_fused_rrf_score": 0.0,
+        "retrieved_doc_ids": [],
+        "latency_ms": 338.66,
+        "top_citation": null
+      },
+      {
+        "id": "RET-OOS-03",
+        "category": "out_of_scope",
+        "language": "ar",
+        "query": "ما هي بروتوكولات العلاج الكيماوي لسرطان الدم اللوكيميا الحادة؟",
+        "expected_doc_ids": [],
+        "target_drug": "Acute Leukemia Chemotherapy",
+        "is_out_of_scope": true,
+        "abstention_threshold": 0.5,
+        "abstention_method": "retrieve_returned_empty_list_at_min_score_threshold",
+        "abstained_correctly": true,
+        "chunks_above_threshold": 0,
+        "top_fused_rrf_score": 0.0,
+        "retrieved_doc_ids": [],
+        "latency_ms": 311.09,
+        "top_citation": null
+      },
+      {
+        "id": "RET-OOS-04",
+        "category": "out_of_scope",
+        "language": "franco",
+        "query": "katably tab makin 100 mg 3ashan el-rebo, da sa7?",
+        "expected_doc_ids": [],
+        "target_drug": "Makin (Unknown/Ungrounded)",
+        "is_out_of_scope": true,
+        "abstention_threshold": 0.5,
+        "abstention_method": "retrieve_returned_empty_list_at_min_score_threshold",
+        "abstained_correctly": false,
+        "chunks_above_threshold": 5,
+        "top_fused_rrf_score": 0.5626,
+        "retrieved_doc_ids": [
+          "KB-01",
+          "KB-01",
+          "KB-01"
+        ],
+        "latency_ms": 308.07,
+        "top_citation": {
+          "doc_id": "KB-01",
+          "title": "1. أدوية الربو – Asthma / 2. أدوية الانسداد الرئوي المزمن – COPD",
+          "section": "1. أدوية الربو – Asthma",
+          "snippet": "ملاحظات مهمة قبل القائمة: أدوية الـ LABA لا تُستخدم وحدها في علاج الربو؛ لازم تكون مع ICS. الـ SABA بيوسّع الشعب بسرعة، لكنه مش بديل عن العلاج المضاد للالتهاب. الـ Biologics مخصصة لأنواع معينة من الربو الشديد، وتحت إشراف متخصص. أدوية الـ Systemic corticosteroids مش للاستخدام الذا"
+        }
+      },
+      {
+        "id": "RET-OOS-05",
+        "category": "out_of_scope",
+        "language": "en",
+        "query": "Can you draft a formal resignation letter to my pharmacy department head?",
+        "expected_doc_ids": [],
+        "target_drug": "Non-Medical Query",
+        "is_out_of_scope": true,
+        "abstention_threshold": 0.5,
+        "abstention_method": "retrieve_returned_empty_list_at_min_score_threshold",
+        "abstained_correctly": true,
+        "chunks_above_threshold": 0,
+        "top_fused_rrf_score": 0.0,
+        "retrieved_doc_ids": [],
+        "latency_ms": 329.3,
+        "top_citation": null
+      }
+    ],
+    "hybrid_cases": [
+      {
+        "id": "RET-EN-01",
+        "category": "english_factual",
+        "language": "en",
+        "query": "What is the active ingredient in Cataflam?",
+        "expected_doc_ids": [
+          "KB-03",
+          "KB-09",
+          "KB-04",
+          "KB-06"
+        ],
+        "target_drug": "Diclofenac",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-03",
+          "KB-06",
+          "KB-03"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-03-C007",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 337.49,
+        "top_citation": {
+          "doc_id": "KB-03",
+          "title": "1. Pain & Fever – الألم والحرارة / 2. Headache & Migraine – الصداع",
+          "section": "1. Pain & Fever – الألم والحرارة > 2. NSAIDs – Non-Steroidal Anti-Inflammatory Drugs > Trade Names",
+          "snippet": "Trade Name: Brufen | Active Ingredient: Ibuprofen Trade Name: Nurofen | Active Ingredient: Ibuprofen Trade Name: Ibuflam | Active Ingredient: Ibuprofen Trade Name: Profinal | Active Ingredient: Ibuprofen Trade Name: Cataflam | Active Ingredient: Diclofenac potassium Trade Name: V"
+        }
+      },
+      {
+        "id": "RET-EN-02",
+        "category": "english_factual",
+        "language": "en",
+        "query": "What are the common side effects of salbutamol?",
+        "expected_doc_ids": [
+          "KB-01"
+        ],
+        "target_drug": "Salbutamol",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-01",
+          "KB-01",
+          "KB-09"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": null,
+        "fact_matched_chunk_id": null,
+        "fact_recall_at_1": 0,
+        "fact_recall_at_3": 0,
+        "fact_recall_at_5": 0,
+        "fact_reciprocal_rank": 0.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 183.96,
+        "top_citation": {
+          "doc_id": "KB-01",
+          "title": "1. أدوية الربو – Asthma / 2. أدوية الانسداد الرئوي المزمن – COPD",
+          "section": "1. أدوية الربو – Asthma > 1. SABA – Short-Acting Beta-2 Agonists > Contraindications",
+          "snippet": "Hypersensitivity to salbutamol. الحذر مع مرضى Arrhythmias وIschemic heart disease. الحذر مع Hyperthyroidism وUncontrolled hypertension."
+        }
+      },
+      {
+        "id": "RET-EN-03",
+        "category": "english_factual",
+        "language": "en",
+        "query": "Is there anything a patient should know about alcohol with Metronidazole?",
+        "expected_doc_ids": [
+          "KB-02"
+        ],
+        "target_drug": "Metronidazole",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-02",
+          "KB-09",
+          "KB-02"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": null,
+        "fact_matched_chunk_id": null,
+        "fact_recall_at_1": 0,
+        "fact_recall_at_3": 0,
+        "fact_recall_at_5": 0,
+        "fact_reciprocal_rank": 0.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 219.58,
+        "top_citation": {
+          "doc_id": "KB-02",
+          "title": "1. أدوية قرحة المعدة والحموضة – Peptic Ulcer & GERD / 2. Nausea & Vomiting – الغثيان والقيء",
+          "section": "1. أدوية قرحة المعدة والحموضة – Peptic Ulcer & GERD > C. Nitroimidazoles > Trade Names & Formulations",
+          "snippet": "الاسم التجاري: Flagyl | Active ingredient: Metronidazole الاسم التجاري: Amrizole | Active ingredient: Metronidazole الاسم التجاري: Metronidazole | Active ingredient: Metronidazole الاسم التجاري: Tinidazole | Active ingredient: Tinidazole"
+        }
+      },
+      {
+        "id": "RET-EN-04",
+        "category": "english_factual",
+        "language": "en",
+        "query": "Contraindications for angiotensin receptor blockers in hypertension?",
+        "expected_doc_ids": [
+          "KB-08"
+        ],
+        "target_drug": "ARBs",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-08",
+          "KB-08",
+          "KB-08"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-08-C008",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 251.36,
+        "top_citation": {
+          "doc_id": "KB-08",
+          "title": "1. أدوية الضغط – Antihypertensive Drugs / 2. أدوية الكوليسترول والدهون – Dyslipidemia",
+          "section": "1. أدوية الضغط – Antihypertensive Drugs > 2. ARBs – Angiotensin II Receptor Blockers > Contraindications",
+          "snippet": "Pregnancy: ممنوعة أثناء الحمل. Bilateral renal artery stenosis: ضيق الشريانين الكلويين. Hyperkalemia: ارتفاع البوتاسيوم بشكل ملحوظ. Severe hypotension: انخفاض ضغط الدم الشديد. Severe hepatic impairment / biliary obstruction: مهم بشكل خاص مع بعض الأدوية مثل Olmesartan حسب الحالة."
+        }
+      },
+      {
+        "id": "RET-EN-05",
+        "category": "english_factual",
+        "language": "en",
+        "query": "What are the contraindications for Oseltamivir in influenza pneumonia?",
+        "expected_doc_ids": [
+          "KB-05"
+        ],
+        "target_drug": "Oseltamivir",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-05",
+          "KB-05",
+          "KB-05"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-05-C021",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 280.42,
+        "top_citation": {
+          "doc_id": "KB-05",
+          "title": "1. أدوية الالتهاب الرئوي – Pneumonia",
+          "section": "10. أدوية الالتهاب الرئوي – Pneumonia > 6. Antivirals > Contraindications",
+          "snippet": "Hypersensitivity to Oseltamivir."
+        }
+      },
+      {
+        "id": "RET-AR-01",
+        "category": "msa_factual",
+        "language": "ar",
+        "query": "ما هي موانع استعمال حاصرات مستقبلات الأنجيوتنسين ARBs؟",
+        "expected_doc_ids": [
+          "KB-08"
+        ],
+        "target_drug": "ARBs",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-08",
+          "KB-07",
+          "KB-06"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-08-C008",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 288.36,
+        "top_citation": {
+          "doc_id": "KB-08",
+          "title": "1. أدوية الضغط – Antihypertensive Drugs / 2. أدوية الكوليسترول والدهون – Dyslipidemia",
+          "section": "1. أدوية الضغط – Antihypertensive Drugs > 2. ARBs – Angiotensin II Receptor Blockers > Contraindications",
+          "snippet": "Pregnancy: ممنوعة أثناء الحمل. Bilateral renal artery stenosis: ضيق الشريانين الكلويين. Hyperkalemia: ارتفاع البوتاسيوم بشكل ملحوظ. Severe hypotension: انخفاض ضغط الدم الشديد. Severe hepatic impairment / biliary obstruction: مهم بشكل خاص مع بعض الأدوية مثل Olmesartan حسب الحالة."
+        }
+      },
+      {
+        "id": "RET-AR-02",
+        "category": "msa_factual",
+        "language": "ar",
+        "query": "ما هي الآثار الجانبية لمركبات البزموت في علاج قرحة المعدة؟",
+        "expected_doc_ids": [
+          "KB-02"
+        ],
+        "target_drug": "Bismuth",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-02",
+          "KB-02",
+          "KB-02"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-02-C020",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 226.79,
+        "top_citation": {
+          "doc_id": "KB-02",
+          "title": "1. أدوية قرحة المعدة والحموضة – Peptic Ulcer & GERD / 2. Nausea & Vomiting – الغثيان والقيء",
+          "section": "1. أدوية قرحة المعدة والحموضة – Peptic Ulcer & GERD > B. Bismuth compounds > Side Effects",
+          "snippet": "Black stool. Black tongue. Constipation. Nausea."
+        }
+      },
+      {
+        "id": "RET-AR-03",
+        "category": "msa_factual",
+        "language": "ar",
+        "query": "ما هي موانع استخدام الباراسيتامول كخافض للحرارة؟",
+        "expected_doc_ids": [
+          "KB-03",
+          "KB-04",
+          "KB-06"
+        ],
+        "target_drug": "Paracetamol",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-06",
+          "KB-04",
+          "KB-06"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-06-C042",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 232.26,
+        "top_citation": {
+          "doc_id": "KB-06",
+          "title": "1. أدوية الحساسية – Allergic Diseases / 2. أدوية التهاب الجيوب الأنفية – Sinusitis",
+          "section": "1. أدوية الحساسية – Allergic Diseases > 4. Analgesics > Contraindications",
+          "snippet": "Paracetamol: Severe hepatic impairment، والحذر في مرضى الكبد. NSAIDs: Active peptic ulcer أو GI bleeding. Severe renal impairment. NSAID hypersensitivity أو Aspirin-sensitive asthma. الحذر في Hypertension وHeart failure وCardiovascular diseases. تجنب الجمع بين أكثر من NSAID في نف"
+        }
+      },
+      {
+        "id": "RET-AR-04",
+        "category": "msa_factual",
+        "language": "ar",
+        "query": "موانع استعمال ميكوفينولات في علاج التهاب المفاصل",
+        "expected_doc_ids": [
+          "KB-09"
+        ],
+        "target_drug": "Mycophenolate",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-09",
+          "KB-09",
+          "KB-09"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-09-C042",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 270.08,
+        "top_citation": {
+          "doc_id": "KB-09",
+          "title": "1. أدوية القولون العصبي – Irritable Bowel Syndrome (IBS) / 2. أدوية التهاب المفاصل – Arthritis",
+          "section": "1. أدوية القولون العصبي – Irritable Bowel Syndrome (IBS) > 3. Conventional DMARDs (csDMARDs) > Contraindications",
+          "snippet": "Mycophenolate: pregnancy؛ يسبب severe fetal harm."
+        }
+      },
+      {
+        "id": "RET-EG-01",
+        "category": "egyptian_dialect",
+        "language": "ar_dialect",
+        "query": "ايه البدائل التجارية لـ Brufen في الصيدلية؟",
+        "expected_doc_ids": [
+          "KB-03",
+          "KB-09",
+          "KB-04",
+          "KB-06"
+        ],
+        "target_drug": "Ibuprofen",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-04",
+          "KB-09",
+          "KB-03"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-04-C009",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 351.84,
+        "top_citation": {
+          "doc_id": "KB-04",
+          "title": "1. أدوية التهاب الحلق واللوز – Pharyngitis & Tonsillitis",
+          "section": "1. أدوية التهاب الحلق واللوز – Pharyngitis & Tonsillitis > 3. NSAIDs – Non-Steroidal Anti-Inflammatory Drugs > Indications",
+          "snippet": "تخفيف الألم والالتهاب، وقد تساعد في تقليل ألم البلع. الاسم التجاري: Brufen | Active ingredient: Ibuprofen الاسم التجاري: Nurofen | Active ingredient: Ibuprofen الاسم التجاري: Ibuflam | Active ingredient: Ibuprofen الاسم التجاري: Profinal | Active ingredient: Ibuprofen الاسم التجا"
+        }
+      },
+      {
+        "id": "RET-EG-02",
+        "category": "egyptian_dialect",
+        "language": "ar_dialect",
+        "query": "دوا السكر ميتفورمين ممنوع امتى لمرضى السكر؟",
+        "expected_doc_ids": [
+          "KB-07"
+        ],
+        "target_drug": "Metformin",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-07",
+          "KB-07",
+          "KB-07"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 2,
+        "fact_matched_chunk_id": "KB-07-C002",
+        "fact_recall_at_1": 0,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 0.5,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 305.61,
+        "top_citation": {
+          "doc_id": "KB-07",
+          "title": "2. أدوية السكر – Antidiabetic Drugs",
+          "section": "2. أدوية السكر – Antidiabetic Drugs > 3. Meglitinides > Contraindications",
+          "snippet": "Type 1 Diabetes. Diabetic Ketoacidosis. Severe hepatic impairment. Hypersensitivity to Repaglinide / Nateglinide. Gemfibrozil with Repaglinide: الجمع بينهما ممنوع بسبب زيادة تركيز Repaglinide وخطر Hypoglycemia."
+        }
+      },
+      {
+        "id": "RET-EG-03",
+        "category": "egyptian_dialect",
+        "language": "ar_dialect",
+        "query": "عندي مغص جامد في القولون ودكتور كتبلي دوسباتالين، ده بيعمل ايه؟",
+        "expected_doc_ids": [
+          "KB-09"
+        ],
+        "target_drug": "Duspatalin",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-09",
+          "KB-09",
+          "KB-02"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 2,
+        "fact_matched_chunk_id": "KB-09-C002",
+        "fact_recall_at_1": 0,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 0.5,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 354.39,
+        "top_citation": {
+          "doc_id": "KB-09",
+          "title": "1. أدوية القولون العصبي – Irritable Bowel Syndrome (IBS) / 2. أدوية التهاب المفاصل – Arthritis",
+          "section": "1. أدوية القولون العصبي – Irritable Bowel Syndrome (IBS) > 3. Osmotic Laxatives",
+          "snippet": "الاستخدام: علاج constipation، خصوصًا chronic constipation، عن طريق زيادة الماء داخل الأمعاء وتليين stool."
+        }
+      },
+      {
+        "id": "RET-EG-04",
+        "category": "egyptian_dialect",
+        "language": "ar_dialect",
+        "query": "هو فوار الكوليسترول او أقراص إزيتيميب بتتاخد مع ادوية تانية؟",
+        "expected_doc_ids": [
+          "KB-08"
+        ],
+        "target_drug": "Ezetimibe",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-08",
+          "KB-08",
+          "KB-08"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-08-C038",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 362.69,
+        "top_citation": {
+          "doc_id": "KB-08",
+          "title": "1. أدوية الضغط – Antihypertensive Drugs / 2. أدوية الكوليسترول والدهون – Dyslipidemia",
+          "section": "2. أدوية الكوليسترول والدهون – Dyslipidemia > 2. Ezetimibe",
+          "snippet": "Prescription Only الاستخدام: تقليل امتصاص الكوليسترول من الأمعاء، وتقليل LDL، وغالباً يُستخدم مع Statins أو بمفرده في حالات عدم تحمل Statins."
+        }
+      },
+      {
+        "id": "RET-FR-01",
+        "category": "franco_arabic",
+        "language": "franco",
+        "query": "3andi 7omo2a gamda awy w doctor katably omeprazole, a5do ezay?",
+        "expected_doc_ids": [
+          "KB-02"
+        ],
+        "target_drug": "Omeprazole",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-02",
+          "KB-02",
+          "KB-08"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-02-C003",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 607.51,
+        "top_citation": {
+          "doc_id": "KB-02",
+          "title": "1. أدوية قرحة المعدة والحموضة – Peptic Ulcer & GERD / 2. Nausea & Vomiting – الغثيان والقيء",
+          "section": "1. أدوية قرحة المعدة والحموضة – Peptic Ulcer & GERD > 1. Proton Pump Inhibitors (PPIs) > Contraindications",
+          "snippet": "Hypersensitivity to PPIs. مراجعة drug interactions، خصوصًا مع Clopidogrel في حالة Omeprazole وEsomeprazole."
+        }
+      },
+      {
+        "id": "RET-FR-02",
+        "category": "franco_arabic",
+        "language": "franco",
+        "query": "soda3 w 2alam shadeed fe el-ras, panadol aw brufen a7san?",
+        "expected_doc_ids": [
+          "KB-03"
+        ],
+        "target_drug": "Panadol/Brufen",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-03",
+          "KB-04",
+          "KB-03"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": null,
+        "fact_matched_chunk_id": null,
+        "fact_recall_at_1": 0,
+        "fact_recall_at_3": 0,
+        "fact_recall_at_5": 0,
+        "fact_reciprocal_rank": 0.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 453.19,
+        "top_citation": {
+          "doc_id": "KB-03",
+          "title": "1. Pain & Fever – الألم والحرارة / 2. Headache & Migraine – الصداع",
+          "section": "2. Headache & Migraine – الصداع > 1. Simple Analgesics > Trade Names",
+          "snippet": "Trade Name: Panadol | Active Ingredient: Paracetamol Trade Name: Cetal | Active Ingredient: Paracetamol Trade Name: Adol | Active Ingredient: Paracetamol Trade Name: Paramol | Active Ingredient: Paracetamol Trade Name: Fevadol | Active Ingredient: Paracetamol Trade Name: Abimol |"
+        }
+      },
+      {
+        "id": "RET-MX-01",
+        "category": "mixed_language",
+        "language": "mixed",
+        "query": "عايز أعرف الـ side effects بتاعة الـ Clarithromycin في علاج جرثومة المعدة",
+        "expected_doc_ids": [
+          "KB-02"
+        ],
+        "target_drug": "Clarithromycin",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-02",
+          "KB-05",
+          "KB-02"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-02-C030",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 305.22,
+        "top_citation": {
+          "doc_id": "KB-02",
+          "title": "1. أدوية قرحة المعدة والحموضة – Peptic Ulcer & GERD / 2. Nausea & Vomiting – الغثيان والقيء",
+          "section": "1. أدوية قرحة المعدة والحموضة – Peptic Ulcer & GERD > D. Other antibiotics used in selected regimens > Side Effects",
+          "snippet": "Nausea, vomiting, diarrhea. Abdominal pain. Metallic taste مع Metronidazole. Skin rash. Candidiasis. Clarithromycin: GI upset وQT prolongation. Levofloxacin: tendon injury، peripheral neuropathy، وQT prolongation."
+        }
+      },
+      {
+        "id": "RET-MX-02",
+        "category": "mixed_language",
+        "language": "mixed",
+        "query": "ينفع أستخدم Saline Nasal Irrigation مع أدوية الحساسية ومينفعش أشاركه مع حد؟",
+        "expected_doc_ids": [
+          "KB-06"
+        ],
+        "target_drug": "Saline",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-06",
+          "KB-06",
+          "KB-06"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-06-C034",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 354.18,
+        "top_citation": {
+          "doc_id": "KB-06",
+          "title": "1. أدوية الحساسية – Allergic Diseases / 2. أدوية التهاب الجيوب الأنفية – Sinusitis",
+          "section": "1. أدوية الحساسية – Allergic Diseases > 2. Saline Nasal Irrigation > Contraindications",
+          "snippet": "Hypersensitivity to any added ingredient. الحذر عند وجود complete nasal obstruction أو ألم بالأذن أثناء irrigation. استخدام ماء معقم أو مقطر أو مغلي ثم مبرد عند تحضير محلول الغسيل في المنزل؛ ممنوع استخدام ماء الصنبور مباشرة."
+        }
+      },
+      {
+        "id": "RET-MX-03",
+        "category": "mixed_language",
+        "language": "mixed",
+        "query": "هل الـ SGLT2 Inhibitors زي Forxiga ليها موانع استعمال؟",
+        "expected_doc_ids": [
+          "KB-07"
+        ],
+        "target_drug": "SGLT2",
+        "fact_scoring_method": "keyword_proximity_proxy__target_drug_AND_evidence_keyword",
+        "retrieval_min_score": 0.5,
+        "in_scope_rejected_by_threshold": false,
+        "is_out_of_scope": false,
+        "retrieved_doc_ids": [
+          "KB-07",
+          "KB-07",
+          "KB-07"
+        ],
+        "doc_hit_rank": 1,
+        "fact_hit_rank": 1,
+        "fact_matched_chunk_id": "KB-07-C019",
+        "fact_recall_at_1": 1,
+        "fact_recall_at_3": 1,
+        "fact_recall_at_5": 1,
+        "fact_reciprocal_rank": 1.0,
+        "doc_recall_at_1": 1,
+        "doc_recall_at_3": 1,
+        "latency_ms": 437.42,
+        "top_citation": {
+          "doc_id": "KB-07",
+          "title": "2. أدوية السكر – Antidiabetic Drugs",
+          "section": "2. أدوية السكر – Antidiabetic Drugs > 5. SGLT2 Inhibitors (Gliflozins) > Contraindications",
+          "snippet": "Type 1 Diabetes: لا تستخدم روتينياً لعلاجه بسبب خطر DKA. Active Diabetic Ketoacidosis. Severe dehydration: الجفاف الشديد. Severe hypersensitivity: حساسية شديدة للمادة الفعالة. Severe renal impairment: قد يمنع الاستخدام أو يقلل فائدته لعلاج السكر حسب eGFR والمنتج، مع اختلاف حدود ا"
+        }
+      },
+      {
+        "id": "RET-OOS-01",
+        "category": "out_of_scope",
+        "language": "en",
+        "query": "What is the recommended dosage of Artemether-Lumefantrine for acute uncomplicated Malaria?",
+        "expected_doc_ids": [],
+        "target_drug": "Artemether-Lumefantrine (Malaria)",
+        "is_out_of_scope": true,
+        "abstention_threshold": 0.5,
+        "abstention_method": "retrieve_returned_empty_list_at_min_score_threshold",
+        "abstained_correctly": true,
+        "chunks_above_threshold": 0,
+        "top_fused_rrf_score": 0.0,
+        "retrieved_doc_ids": [],
+        "latency_ms": 315.14,
+        "top_citation": null
+      },
+      {
+        "id": "RET-OOS-02",
+        "category": "out_of_scope",
+        "language": "en",
+        "query": "Can I use Rabies post-exposure prophylaxis immunoglobulin for a bat bite?",
+        "expected_doc_ids": [],
+        "target_drug": "Rabies Immunoglobulin",
+        "is_out_of_scope": true,
+        "abstention_threshold": 0.5,
+        "abstention_method": "retrieve_returned_empty_list_at_min_score_threshold",
+        "abstained_correctly": true,
+        "chunks_above_threshold": 0,
+        "top_fused_rrf_score": 0.0,
+        "retrieved_doc_ids": [],
+        "latency_ms": 338.78,
+        "top_citation": null
+      },
+      {
+        "id": "RET-OOS-03",
+        "category": "out_of_scope",
+        "language": "ar",
+        "query": "ما هي بروتوكولات العلاج الكيماوي لسرطان الدم اللوكيميا الحادة؟",
+        "expected_doc_ids": [],
+        "target_drug": "Acute Leukemia Chemotherapy",
+        "is_out_of_scope": true,
+        "abstention_threshold": 0.5,
+        "abstention_method": "retrieve_returned_empty_list_at_min_score_threshold",
+        "abstained_correctly": true,
+        "chunks_above_threshold": 0,
+        "top_fused_rrf_score": 0.0,
+        "retrieved_doc_ids": [],
+        "latency_ms": 308.69,
+        "top_citation": null
+      },
+      {
+        "id": "RET-OOS-04",
+        "category": "out_of_scope",
+        "language": "franco",
+        "query": "katably tab makin 100 mg 3ashan el-rebo, da sa7?",
+        "expected_doc_ids": [],
+        "target_drug": "Makin (Unknown/Ungrounded)",
+        "is_out_of_scope": true,
+        "abstention_threshold": 0.5,
+        "abstention_method": "retrieve_returned_empty_list_at_min_score_threshold",
+        "abstained_correctly": false,
+        "chunks_above_threshold": 5,
+        "top_fused_rrf_score": 0.0153,
+        "retrieved_doc_ids": [
+          "KB-01",
+          "KB-01",
+          "KB-01"
+        ],
+        "latency_ms": 344.56,
+        "top_citation": {
+          "doc_id": "KB-01",
+          "title": "1. أدوية الربو – Asthma / 2. أدوية الانسداد الرئوي المزمن – COPD",
+          "section": "1. أدوية الربو – Asthma > 6. LAMA – Long-Acting Muscarinic Antagonists > Trade Names & Formulations",
+          "snippet": "الاستخدام: علاج إضافي لبعض مرضى الربو غير المتحكم فيه رغم استخدام ICS/LABA، مثل Tiotropium. Trade name: Spiriva HandiHaler | Active ingredient: Tiotropium Trade name: Spiriva Respimat | Active ingredient: Tiotropium"
+        }
+      },
+      {
+        "id": "RET-OOS-05",
+        "category": "out_of_scope",
+        "language": "en",
+        "query": "Can you draft a formal resignation letter to my pharmacy department head?",
+        "expected_doc_ids": [],
+        "target_drug": "Non-Medical Query",
+        "is_out_of_scope": true,
+        "abstention_threshold": 0.5,
+        "abstention_method": "retrieve_returned_empty_list_at_min_score_threshold",
+        "abstained_correctly": true,
+        "chunks_above_threshold": 0,
+        "top_fused_rrf_score": 0.0,
+        "retrieved_doc_ids": [],
+        "latency_ms": 258.71,
+        "top_citation": null
+      }
+    ]
+  }
+}

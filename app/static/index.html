@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f8fb">
+  <title>MTI Medical Knowledge Chatbot</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="header">
+      <div class="brand-mark" aria-hidden="true">M</div>
+      <div>
+        <p class="eyebrow">MTI · Knowledge assistant</p>
+        <h1>Medical information, with sources</h1>
+        <p class="subtitle">Answers are limited to the approved knowledge documents.</p>
+      </div>
+      <span id="connection" class="connection" role="status">Checking service…</span>
+    </header>
+
+    <section class="chat-card" aria-label="Conversation">
+      <div id="messages" class="messages" aria-live="polite" aria-relevant="additions text">
+        <article class="message assistant">
+          <div class="bubble">Ask a question in English, Arabic, Egyptian dialect, Franco-Arabic, or a mix.</div>
+        </article>
+      </div>
+      <form id="chat-form" class="composer">
+        <label class="sr-only" for="message-input">Your question</label>
+        <textarea id="message-input" rows="2" maxlength="8000" required placeholder="Type your question…"></textarea>
+        <button id="send-button" type="submit">Send</button>
+      </form>
+      <p class="privacy-note">Do not enter real patient information. This assessment demo is not an emergency service.</p>
+    </section>
+
+    <section id="handoff-panel" class="handoff-panel" hidden>
+      <h2>Escalation handoff demonstration</h2>
+      <p>Submitting stores these demonstration details only. No clinician is contacted.</p>
+      <form id="handoff-form" class="handoff-form">
+        <label>Short summary <textarea id="handoff-summary" maxlength="1000" required></textarea></label>
+        <label>Name <input id="contact-name" maxlength="100" required></label>
+        <label>Contact method <input id="contact-method" maxlength="254" required placeholder="Synthetic email or phone"></label>
+        <button type="submit">Save handoff details</button>
+      </form>
+      <p id="handoff-result" role="status"></p>
+    </section>
+  </main>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>

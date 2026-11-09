@@ -1,0 +1,170 @@
+# Evidence-Backed Knowledge Base Manifest (Phase 1)
+# Maps the nine supplied Word documents in Docs/Data/ to Appendix A IDs KB-01 through KB-09.
+# No files are split, merged, or altered.
+
+manifest_version: "1.0.0"
+created_at: "2026-11-04"
+corpus_root: "Docs/Data"
+
+documents:
+  - doc_id: "KB-01"
+    appendix_a_topic: "Asthma; COPD"
+    filename: "asthma w copd.docx"
+    relative_path: "Docs/Data/asthma w copd.docx"
+    size_bytes: 33148
+    sha256: "384877c0f1cd0b5b3157b5bc54349772d549dd9b2bfb09daf92a63bacdc2c60d"
+    paragraph_count: 622
+    heading_style_count: 21
+    title: "1. أدوية الربو – Asthma / 2. أدوية الانسداد الرئوي المزمن – COPD"
+    primary_sections:
+      - "1. أدوية الربو – Asthma (SABA, LABA, ICS, ICS/LABA, LTRA, LAMA, Systemic Corticosteroids)"
+      - "2. أدوية الانسداد الرئوي المزمن – COPD (SABA, LABA, LAMA, LABA/LAMA, ICS/LABA, Triple Therapy, PDE-4 Inhibitors, Mucolytics, Systemic Corticosteroids, Antibiotics)"
+
+  - doc_id: "KB-02"
+    appendix_a_topic: "Peptic ulcer and GERD; nausea and vomiting"
+    filename: "gerd& vomiting.docx"
+    relative_path: "Docs/Data/gerd& vomiting.docx"
+    size_bytes: 28547
+    sha256: "70bd3ab82b34b990f5c8c95a1726288b8e1df78c5c5cb704fc7cba13894d0c12"
+    paragraph_count: 399
+    heading_style_count: 22
+    title: "1. أدوية قرحة المعدة والحموضة – Peptic Ulcer & GERD / 2. Nausea & Vomiting – الغثيان والقيء"
+    primary_sections:
+      - "1. أدوية قرحة المعدة والحموضة – Peptic Ulcer & GERD (PPIs, H2 Blockers, Antacids, Alginates, Mucosal Protective Agents, Prostaglandin Analogues, H. pylori Eradication Antibiotics incl. Nitroimidazoles/Metronidazole)"
+      - "2. Nausea & Vomiting – الغثيان والقيء (Antiemetics, Antihistamines, Anticholinergics, ORS)"
+
+  - doc_id: "KB-03"
+    appendix_a_topic: "Pain and fever; headache and migraine"
+    filename: "pain headache ibs arthritis.docx"
+    relative_path: "Docs/Data/pain headache ibs arthritis.docx"
+    size_bytes: 39783
+    sha256: "43471ade85a430db5a8d5072bb4f4de5fc582f0145150221f2790b4ba3107e7f"
+    paragraph_count: 419
+    heading_style_count: 8
+    title: "1. Pain & Fever – الألم والحرارة / 2. Headache & Migraine – الصداع"
+    primary_sections:
+      - "1. Pain & Fever – الألم والحرارة (1. Paracetamol, 2. NSAIDs, 3. Topical NSAIDs, 4. Topical Analgesics, 5. Counterirritants, 6. Salicylates, OTC vs Prescription)"
+      - "2. Headache & Migraine – الصداع (1. Simple Analgesics, 2. NSAIDs, 3. Combination Analgesics, 4. Caffeine-containing Analgesics, مستحضر خاص بالـMigraine, OTC vs Prescription)"
+    notes: >
+      Filename includes 'ibs arthritis', but full paragraph inspection (paragraphs 000..418) confirms
+      this document contains ONLY '1. Pain & Fever' and '2. Headache & Migraine'. It has zero IBS sections
+      and no dedicated Arthritis section. In Part 1 (Pain & Fever), sub-items 1..6 use Normal paragraph
+      styles rather than Word Heading styles.
+
+  - doc_id: "KB-04"
+    appendix_a_topic: "Pharyngitis and tonsillitis"
+    filename: "pharyngitis.docx"
+    relative_path: "Docs/Data/pharyngitis.docx"
+    size_bytes: 22533
+    sha256: "f96a6761b5b48dc87330187a977e9771b249a49c042f3d77773ab32a9582f686"
+    paragraph_count: 201
+    heading_style_count: 11
+    title: "1. أدوية التهاب الحلق واللوز – Pharyngitis & Tonsillitis"
+    primary_sections:
+      - "1. أدوية التهاب الحلق واللوز – Pharyngitis & Tonsillitis (Analgesics, Antipyretics, NSAIDs, Local Anesthetics, Antibiotics: Penicillins, Cephalosporins, Macrolides, Lincosamides)"
+
+  - doc_id: "KB-05"
+    appendix_a_topic: "Pneumonia"
+    filename: "أدوية الالتهاب الرئوي.docx"
+    relative_path: "Docs/Data/أدوية الالتهاب الرئوي.docx"
+    size_bytes: 23746
+    sha256: "e7586dd8655433959b092182de1376fbaf9535d209d468c8df09d7291b71db90"
+    paragraph_count: 294
+    heading_style_count: 10
+    title: "1. أدوية الالتهاب الرئوي – Pneumonia"
+    primary_sections:
+      - "1. أدوية الالتهاب الرئوي – Pneumonia (Penicillins, Cephalosporins, Macrolides, Respiratory Fluoroquinolones, Tetracyclines, Antivirals, Antifungals)"
+
+  - doc_id: "KB-06"
+    appendix_a_topic: "Allergic diseases; sinusitis"
+    filename: "ادويه الحساسيه و الجيوب الانفيه.docx"
+    relative_path: "Docs/Data/ادويه الحساسيه و الجيوب الانفيه.docx"
+    size_bytes: 45185
+    sha256: "c0895dd47a61654c20b7080c7bb055010f439d84aa5c286ceab0c9db5d5505b3"
+    paragraph_count: 620
+    heading_style_count: 18
+    title: "1. أدوية الحساسية – Allergic Diseases / 2. أدوية التهاب الجيوب الأنفية – Sinusitis"
+    primary_sections:
+      - "1. أدوية الحساسية – Allergic Diseases (H1 Antihistamines 1st/2nd Gen, Corticosteroids, Leukotriene Antagonists, Mast Cell Stabilizers, Topical Antihistamines, Adrenaline, Biologics)"
+      - "2. أدوية التهاب الجيوب الأنفية – Sinusitis (Nasal Corticosteroids, Saline Irrigation, Decongestants, Analgesics, Antihistamines, Antibiotics)"
+
+  - doc_id: "KB-07"
+    appendix_a_topic: "Diabetes"
+    filename: "ادويه السكر.docx"
+    relative_path: "Docs/Data/ادويه السكر.docx"
+    size_bytes: 29277
+    sha256: "b6df238ab76bec5806b21784dfee45ed344f7b880ca44123868f43620daddd62"
+    paragraph_count: 516
+    heading_style_count: 37
+    title: "2. أدوية السكر – Antidiabetic Drugs"
+    primary_sections:
+      - "2. أدوية السكر – Antidiabetic Drugs (Biguanides/Metformin, Sulfonylureas, Meglitinides, DPP-4 Inhibitors, SGLT2 Inhibitors, GLP-1 Receptor Agonists, TZDs, Alpha-Glucosidase Inhibitors, Insulins)"
+
+  - doc_id: "KB-08"
+    appendix_a_topic: "Hypertension; dyslipidemia"
+    filename: "ادويه الضغط و الكوليسترول.docx"
+    relative_path: "Docs/Data/ادويه الضغط و الكوليسترول.docx"
+    size_bytes: 56436
+    sha256: "66ba32afd2958e6d177ffdb9556142b21830d205579fb5f3aea1c1306aff7b32"
+    paragraph_count: 824
+    heading_style_count: 58
+    title: "1. أدوية الضغط – Antihypertensive Drugs / 2. أدوية الكوليسترول والدهون – Dyslipidemia"
+    primary_sections:
+      - "1. أدوية الضغط – Antihypertensive Drugs (ACE Inhibitors, ARBs, Beta Blockers, CCBs, Thiazide Diuretics, Loop Diuretics, Potassium-Sparing Diuretics, Alpha-1 Blockers)"
+      - "2. أدوية الكوليسترول والدهون – Dyslipidemia (Statins, Ezetimibe, PCSK9 Inhibitors, Fibrates, Omega-3 Fatty Acids, Bile Acid Sequestrants)"
+
+  - doc_id: "KB-09"
+    appendix_a_topic: "Irritable bowel syndrome; arthritis"
+    filename: "ادويه القولون و التهابات المفاصل.docx"
+    relative_path: "Docs/Data/ادويه القولون و التهابات المفاصل.docx"
+    size_bytes: 43805
+    sha256: "ad3234862fed2baae733f79081b3f2366e577fe8a2d4cae447fdfa8985e33c95"
+    paragraph_count: 509
+    heading_style_count: 0
+    title: "1. أدوية القولون العصبي – Irritable Bowel Syndrome (IBS) / 2. أدوية التهاب المفاصل – Arthritis"
+    primary_sections:
+      - "1. أدوية القولون العصبي – Irritable Bowel Syndrome (IBS) (1. Antispasmodics, 2. Bulk-forming Laxatives, 3. Osmotic Laxatives, 4. Antidiarrheals, 5. Secretagogues, 6. Low-dose TCAs, 7. Probiotics)"
+      - "2. أدوية التهاب المفاصل – Arthritis (1. NSAIDs, 2. Corticosteroids, 3. Conventional DMARDs, 4. Biologic DMARDs, 5. JAK Inhibitors, 6. Analgesics)"
+    notes: >
+      All 509 paragraphs in this file use the Word 'Normal' style (zero Word Heading styles).
+      Phase 2 ingestion must detect numbered section titles (e.g. '1. أدوية القولون العصبي...', '1. Antispasmodics')
+      in addition to Word Heading styles.
+
+overlap_analysis:
+  apparent_filename_conflict: >
+    `pain headache ibs arthritis.docx` (KB-03) includes 'ibs arthritis' in its filename, which appears at first glance
+    to overlap with `ادويه القولون و التهابات المفاصل.docx` (KB-09: Irritable bowel syndrome; arthritis).
+  actual_document_structure_finding: >
+    Full inspection of all 419 paragraphs of `pain headache ibs arthritis.docx` and all 509 paragraphs of
+    `ادويه القولون و التهابات المفاصل.docx` proves that `pain headache ibs arthritis.docx` was misnamed when saved:
+    its body contains ONLY Section 1 ('1. Pain & Fever – الألم والحرارة', paras 000..245) and Section 2
+    ('2. Headache & Migraine – الصداع', paras 246..418), matching Appendix A KB-03 ('Pain and fever; headache and migraine')
+    100%. Meanwhile, `ادويه القولون و التهابات المفاصل.docx` contains ONLY Section 1 ('1. أدوية القولون العصبي – IBS',
+    paras 000..238) and Section 2 ('2. أدوية التهاب المفاصل – Arthritis', paras 239..508), matching Appendix A KB-09 100%.
+  cross_document_pharmacological_overlap:
+    - drug_class: "Systemic NSAIDs (Brufen/Ibuprofen, Nurofen, Profinal, Ibuflam, Cataflam/Diclofenac potassium, Voltaren/Diclofenac sodium, Olfen, Mobic/Meloxicam, Celebrex/Celecoxib, Arcoxia/Etoricoxib, Naprosyn/Naproxen, Xefo/Lornoxicam, Feldene/Piroxicam)"
+      appearing_in:
+        - "KB-03 (`pain headache ibs arthritis.docx` — Part 1: Pain & Fever -> 2. NSAIDs; Part 2: Headache & Migraine -> 2. NSAIDs)"
+        - "KB-09 (`ادويه القولون و التهابات المفاصل.docx` — Part 2: Arthritis -> 1. NSAIDs)"
+        - "KB-04 (`pharyngitis.docx` — 3. NSAIDs)"
+      differences_noted: >
+        Trade names, active ingredients, side effects, and contraindications for NSAIDs are nearly identical across
+        KB-03 (Pain/Headache) and KB-09 (Arthritis), except KB-03 Headache & Migraine additionally lists `Flabu` (Ibuprofen)
+        and `Spididol` (Ibuprofen arginine), and KB-03 Pain & Fever additionally lists `Declophen` (Diclofenac).
+    - drug_class: "Simple Analgesics / Paracetamol (Panadol, Cetal, Adol, Paramol, Fevadol, Abimol)"
+      appearing_in:
+        - "KB-03 (`pain headache ibs arthritis.docx` — Part 1: 1. Paracetamol; Part 2: 1. Simple Analgesics)"
+        - "KB-09 (`ادويه القولون و التهابات المفاصل.docx` — Part 2: Arthritis -> 6. Analgesics, alongside Tramadol/Tramal/Contramal/Zaldiar)"
+        - "KB-04 (`pharyngitis.docx` — 1. Analgesics, 2. Antipyretics)"
+        - "KB-06 (`ادويه الحساسيه و الجيوب الانفيه.docx` — Sinusitis -> 4. Analgesics)"
+    - drug_class: "Antibiotics (Penicillins, Cephalosporins, Macrolides, Nitroimidazoles/Metronidazole)"
+      appearing_in:
+        - "KB-01 (COPD -> 10. Antibiotics), KB-02 (H. pylori -> 7. Antibiotics incl. Metronidazole/Flagyl/Amrizole), KB-04 (Pharyngitis -> 5. Antibiotics), KB-05 (Pneumonia -> 1..3), KB-06 (Sinusitis -> 6. Antibiotics)"
+  handling_policy: >
+    1. Keep the deterministic 1-to-1 file-to-KB-ID mapping above with zero splitting or merging of files.
+    2. For shared drug classes (such as NSAIDs or Paracetamol appearing in KB-03, KB-09, KB-04, KB-06), both KB-03
+       and KB-09 (and any other matching KB document) are legitimate, accurate sources when a query asks a general
+       drug question (e.g., Dev Q1 'What is the active ingredient in Cataflam?' or Dev Q2 'ايه البدائل التجارية لـ Brufen؟').
+    3. Retrieval and citation logic must preserve exact chunk provenance (`doc_id`, `title`, `section`, `snippet`)
+       for every retrieved chunk used in the answer, and evaluation labels for general NSAID/Paracetamol questions
+       must accept any retrieved starter KB ID (`KB-03`, `KB-09`, `KB-04`) that explicitly contains the cited fact.

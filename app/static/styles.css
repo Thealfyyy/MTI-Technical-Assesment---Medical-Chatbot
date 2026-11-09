@@ -1,0 +1,57 @@
+:root {
+  color-scheme: light;
+  --ink: #172538;
+  --muted: #66758a;
+  --blue: #2455a6;
+  --blue-soft: #eaf1fc;
+  --line: #dce4ef;
+  --surface: #fff;
+  --page: #f6f8fb;
+  --warning: #fff4df;
+  font-family: Inter, "Segoe UI", Tahoma, Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--ink); background: var(--page); }
+.shell { width: min(920px, calc(100% - 32px)); margin: 44px auto; }
+.header { display: flex; gap: 16px; align-items: center; margin-bottom: 24px; }
+.brand-mark { display: grid; place-items: center; flex: 0 0 48px; height: 48px; border-radius: 15px; color: #fff; background: var(--blue); font-size: 23px; font-weight: 750; }
+.eyebrow { margin: 0 0 4px; color: var(--blue); font-size: 12px; font-weight: 750; letter-spacing: .09em; text-transform: uppercase; }
+h1 { margin: 0; font-size: clamp(22px, 3vw, 30px); letter-spacing: -.025em; }
+.subtitle { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
+.connection { margin-left: auto; color: var(--muted); font-size: 12px; white-space: nowrap; }
+.connection.ready { color: #19734e; }
+.connection.error { color: #a63a35; }
+.chat-card, .handoff-panel { overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: 0 12px 34px #1b355010; }
+.messages { display: flex; flex-direction: column; gap: 16px; min-height: 360px; max-height: 58vh; overflow-y: auto; padding: 24px; }
+.message { display: flex; }
+.message.user { justify-content: flex-end; }
+.bubble { max-width: min(760px, 90%); padding: 13px 16px; border-radius: 14px; background: #f0f3f8; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
+.user .bubble { color: #fff; background: var(--blue); }
+.status { display: inline-block; margin-bottom: 8px; color: var(--muted); font-size: 11px; font-weight: 750; letter-spacing: .07em; text-transform: uppercase; }
+.status.escalated { padding: 4px 8px; border-radius: 999px; color: #81540b; background: var(--warning); }
+.status.out_of_scope { color: #81540b; }
+.citations { display: grid; gap: 8px; margin: 12px 0 0; }
+.citation { border-inline-start: 3px solid #a7bce0; padding: 8px 11px; border-radius: 0 8px 8px 0; background: var(--blue-soft); font-size: 12px; }
+.citation strong { display: block; margin-bottom: 3px; }
+.citation p { margin: 3px 0; color: #45546a; line-height: 1.5; }
+.composer { display: flex; align-items: end; gap: 12px; padding: 16px; border-top: 1px solid var(--line); }
+textarea, input { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 12px; color: var(--ink); background: #fff; font: inherit; }
+textarea:focus, input:focus { outline: 3px solid #2455a62b; border-color: var(--blue); }
+button { border: 0; border-radius: 10px; padding: 12px 20px; color: #fff; background: var(--blue); font: inherit; font-weight: 700; cursor: pointer; }
+button:disabled { opacity: .55; cursor: wait; }
+.privacy-note { margin: 0; padding: 0 18px 14px; color: var(--muted); font-size: 11px; }
+.handoff-panel { margin-top: 20px; padding: 20px; }
+.handoff-panel h2 { margin: 0 0 8px; font-size: 18px; }
+.handoff-panel p { color: var(--muted); font-size: 13px; }
+.handoff-form { display: grid; gap: 12px; }
+.handoff-form label { display: grid; gap: 6px; font-size: 13px; font-weight: 650; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+[dir="rtl"] .bubble { text-align: right; }
+@media (max-width: 620px) {
+  .shell { margin: 20px auto; }
+  .header { align-items: flex-start; }
+  .connection { position: absolute; top: 18px; right: 18px; }
+  .messages { min-height: 52vh; padding: 16px; }
+  .composer { align-items: stretch; flex-direction: column; }
+  .composer button { width: 100%; }
+}

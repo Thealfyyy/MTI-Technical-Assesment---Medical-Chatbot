@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "medical-knowledge-chatbot"
+version = "0.1.0"
+description = "MTI AI Solutions Technical Assessment — Medical Knowledge RAG Chatbot"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Proprietary - Technical Assessment" }
+authors = [
+    { name = "Adham" }
+]
+dependencies = [
+    "fastapi==0.115.6",
+    "uvicorn[standard]==0.34.0",
+    "pydantic==2.10.4",
+    "pydantic-settings==2.7.1",
+    "python-docx==1.1.2",
+    "PyYAML==6.0.2",
+    "httpx==0.28.1",
+    "sentence-transformers==3.3.1",
+    "chromadb==0.6.3",
+    "python-multipart==0.0.20",
+    "python-dotenv==1.2.4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.3.4",
+    "pytest-asyncio==0.25.2",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
