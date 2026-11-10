@@ -1,5 +1,7 @@
 # Phase 1 Handoff Document & Prompt for the RTX 3090 PC
 
+> **Archive notice:** this is the Phase 1 record and the prompt that was used for the Phase 1 GPU benchmark. Its `.venv` / `run_pc_benchmark.ps1` steps are historical and must not be followed now. Current run and acceptance steps live in [`README.md`](../README.md) (machine-local `.venv-pc`, Qwen3-8B Vulkan llama-server, uvicorn, `/health`, `evaluation.run_eval`).
+
 This file is stored on the shared external drive (`docs/PHASE1_LAPTOP_REPORT_AND_PC_HANDOFF.md`) so you can open this exact context in Antigravity on the **RTX 3090 PC** without needing to manually copy local `C:\Users\User\.gemini\antigravity` app data between machines.
 
 ---

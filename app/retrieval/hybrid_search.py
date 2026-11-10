@@ -86,14 +86,134 @@ BILINGUAL_SYNONYMS: dict[str, list[str]] = {
     "saline": ["محلول", "ملحي", "بخاخ", "شطف"],
     "omeprazole": ["أوميبرازول", "losec", "حموضة", "قرحة", "gerd"],
     "أوميبرازول": ["omeprazole", "losec", "حموضة"],
+    # Nouns the Franco normalizer emits. The corpus writes these with the
+    # definite article ("القولون", "الأعراض") or in English, so a bare Arabic
+    # noun from a Franco query needs the corpus form to score lexically.
+    "مادة": ["المادة", "active", "ingredient"],
+    "فعالة": ["الفعالة", "active", "ingredient"],
+    "اسم": ["name", "الاسم", "trade"],
+    "تجارية": ["trade", "brand", "التجارية"],
+    "قولون": ["القولون", "colon", "ibs"],
+    "حموضة": ["الحموضة", "acidity", "heartburn", "gerd"],
+    "أعراض": ["الأعراض", "side", "effects"],
+    "جرعة": ["الجرعة", "dose", "dosing"],
+    "معدة": ["المعدة", "stomach", "gastric", "ulcer"],
+    "صداع": ["الصداع", "headache", "migraine"],
+    "سخونة": ["السخونة", "fever", "temperature"],
+    "حساسية": ["الحساسية", "allergy", "allergic", "histamine"],
+    "ربو": ["الربو", "asthma"],
+    "سكر": ["السكر", "diabetes", "glucose", "diabetic"],
+    "ضغط": ["الضغط", "hypertension", "blood", "pressure"],
+    "إسهال": ["diarrhea", "الإسهال"],
+    "قيء": ["vomiting", "القيء", "nausea"],
+    "كحة": ["cough", "الكحة"],
+    "حلق": ["throat", "الحلق", "pharyngitis"],
+    "ألم": ["pain", "الألم"],
+    "وجع": ["pain", "الألم"],
+    "شفايف": ["lips", "الشفايف"],
+    "زرقا": ["blue", "زرقاء"],
+    "نفس": ["breathing", "breath", "التنفس"],
+    "استعمال": ["use", "استخدام", "indication"],
+    "يستخدم": ["used", "use", "indication"],
 }
 
+# Arabic transliterations of trade names -> the exact Latin spelling the corpus
+# uses. Pharmacists type "بروفين" while the knowledge base writes "Brufen";
+# without this bridge the Arabic-script query falls below the dense abstention
+# threshold (0.468 measured) and the trade-name table can never be reached.
+# This is a lexical alias table only: it names drugs that already exist in the
+# corpus and never states what any of them does.
+CORPUS_NAME_ALIASES: dict[str, str] = {
+    "بروفين": "Brufen",
+    "نوروفين": "Nurofen",
+    "بروفينال": "Profinal",
+    "ايبوفلام": "Ibuflam",
+    "كاتافلام": "Cataflam",
+    "فولتارين": "Voltaren",
+    "موبيك": "Mobic",
+    "سيليبريكس": "Celebrex",
+    "اركوكسيا": "Arcoxia",
+    "نابروسين": "Naprosyn",
+    "فيلدين": "Feldene",
+    "بانادول": "Panadol",
+    "بنادول": "Panadol",
+    "سيتال": "Cetal",
+    "ادول": "Adol",
+    "بارامول": "Paramol",
+    "فيفادول": "Fevadol",
+    "ابيمول": "Abimol",
+    "كالوبول": "Calpol",
+    "اوجمنتين": "Augmentin",
+    "اموكسيل": "Amoxil",
+    "كلاسيد": "Klacid",
+    "لوزيك": "Losec",
+    "اوميز": "Omez",
+    "نيكسيوم": "Nexium",
+    "كونترولوك": "Controloc",
+    "بانتولوك": "Pantoloc",
+    "بوسكوبان": "Buscopan",
+    "ايفيرالجان": "Efferalgan",
+    "دوسباتالين": "Duspatalin",
+    "فنتولين": "Ventolin",
+    "جلوكوفاج": "Glucophage",
+    "فلاجيل": "Flagyl",
+    "تاميفلو": "Tamiflu",
+    "فورسيجا": "Forxiga",
+    "جارديانس": "Jardiance",
+    "ايزيترول": "Ezetrol",
+    "كونكور": "Concor",
+    "ميتفورمين": "Metformin",
+    "تيوتروبيوم": "Tiotropium",
+    "سبيريفا": "Spiriva",
+    "مونتيلوكاست": "Montelukast",
+    "ميتوكلوبراميد": "Metoclopramide",
+    "سيمفاستاتين": "Simvastatin",
+    "ميثوتريكسات": "Methotrexate",
+    "كلاريثرومايسين": "Clarithromycin",
+    "اموكسيسيلين": "Amoxicillin",
+    "بنسلين": "Penicillin",
+}
+
+# Arabic punctuation (including ؟ U+061F) lives inside the \u0600-\u06FF block,
+# so a naive run glues it to the word: "بروفين؟" would never match "بروفين".
+_ARABIC_RUN = re.compile(r"[\u0600-\u06FF]+")
+_ARABIC_EDGE_PUNCTUATION = "\u060c\u061b\u061f\u066a\u066b\u066c\u066d\u06d4"
+
+
+def expand_corpus_aliases(query: str) -> str:
+    """Append the corpus spelling of any Arabic trade-name transliteration.
+
+    The original wording is preserved; the Latin name is added so that both the
+    embedding and the BM25 query carry the spelling the corpus actually uses.
+    """
+    found: list[str] = []
+    for raw in _ARABIC_RUN.findall(query):
+        token = raw.strip(_ARABIC_EDGE_PUNCTUATION)
+        candidates = [token]
+        if token.startswith("ال") and len(token) > 4:
+            candidates.append(token[2:])
+        for candidate in candidates:
+            latin = CORPUS_NAME_ALIASES.get(candidate)
+            if latin:
+                found.append(latin)
+    if not found:
+        return query
+    return f"{query} {' '.join(dict.fromkeys(found))}"
+
+
+# Arabic punctuation sits inside the \u0600-\u06FF block, so a naive token pattern
+# glues it to the preceding word: "Controloc؟" tokenizes as one token and can
+# never match the corpus brand name. Strip it, plus the diacritics that would
+# otherwise make a vocalized word a different token from its unvocalized form.
+_ARABIC_PUNCTUATION = "\u060c\u061b\u061f\u066a\u066b\u066c\u066d\u06d4"
+_ARABIC_DIACRITICS = re.compile("[\u064b-\u0652\u0670\u0640]")
 
 BM25_STOP_WORDS: set[str] = {
     "what", "are", "the", "of", "in", "is", "for", "with", "to", "a", "an", "do", "does", "any",
     "there", "patient", "should", "know", "about", "common", "how", "can", "when", "why", "where",
-    "ما", "هي", "هو", "في", "من", "عن", "مع", "هل", "ايه", "ده", "دي", "عايز", "اعرف", "لو", "او", "أو",
+    "ما", "هي", "هو", "في", "من", "عن", "مع", "هل", "ايه", "إيه", "ده", "دي", "عايز", "اعرف", "لو", "او", "أو",
     "ينفع", "ممكن", "عندي", "بتاعة", "بتاع", "ودكتور", "دكتور", "كتبلي", "ليها", "زي",
+    "على", "إلى", "ال", "إزاي", "امتى", "فين", "ليه",
 }
 
 
@@ -127,13 +247,73 @@ class SimpleBM25Index:
 
     @staticmethod
     def _tokenize(text: str) -> list[str]:
-        # Match Arabic and Latin alphanumeric tokens
-        tokens = re.findall(r"[\u0600-\u06FFa-zA-Z0-9]+", text.lower())
-        return [t for t in tokens if len(t) > 1]
+        # Match Arabic and Latin alphanumeric tokens, then trim the Arabic
+        # punctuation the character class unavoidably includes at the edges.
+        cleaned = _ARABIC_DIACRITICS.sub("", text.lower())
+        tokens = re.findall(r"[\u0600-\u06FFa-zA-Z0-9]+", cleaned)
+        return [t for t in (token.strip(_ARABIC_PUNCTUATION) for token in tokens) if len(t) > 1]
 
     def idf(self, term: str) -> float:
         n = self.doc_freqs.get(term, 0)
         return math.log(1.0 + (self.corpus_size - n + 0.5) / (n + 0.5))
+
+    def exact_term_matches(
+        self, query: str, max_doc_freq: int = 8, top_k: int = 3
+    ) -> list[RetrievedChunk]:
+        """Return chunks containing a distinctive, capitalized Latin query term.
+
+        Dense similarity often misses a single brand name buried in a long
+        trade-name table. Trade names are written with an initial capital in the
+        corpus (``Controloc``) while ordinary English words in running text are
+        not, so a rare *and* capitalized Latin token is treated as an exact drug
+        or brand lookup. Without this, a query such as ``active ingredient in
+        Controloc`` can be answered from an unrelated passage that merely shares
+        the words "active ingredient".
+        """
+        rare_tokens = [
+            token
+            for token in dict.fromkeys(self._tokenize(query))
+            if len(token) >= 4
+            and token.isascii()
+            and 0 < self.doc_freqs.get(token, 0) <= max_doc_freq
+        ]
+        if not rare_tokens:
+            return []
+
+        scored: list[tuple[str, float]] = []
+        for chunk_id in self.doc_ids:
+            text = self.chunks[chunk_id].text
+            matched = [
+                token
+                for token in rare_tokens
+                if any(
+                    occ[:1].isupper()
+                    for occ in re.findall(
+                        rf"(?<![A-Za-z]){re.escape(token)}(?![A-Za-z])", text, re.IGNORECASE
+                    )
+                )
+            ]
+            if matched:
+                scored.append((chunk_id, float(sum(self.idf(token) for token in matched))))
+
+        scored.sort(key=lambda item: item[1], reverse=True)
+        results: list[RetrievedChunk] = []
+        for rank, (chunk_id, score) in enumerate(scored[:top_k], start=1):
+            chunk = self.chunks[chunk_id]
+            results.append(
+                RetrievedChunk(
+                    doc_id=chunk.metadata.doc_id,
+                    title=chunk.metadata.title,
+                    section=chunk.metadata.section,
+                    chunk_id=chunk.id,
+                    snippet=chunk.metadata.snippet,
+                    text=chunk.text,
+                    score=score,
+                    rank=rank,
+                    source="lexical-exact",
+                )
+            )
+        return results
 
     def search(self, query: str, top_k: int = 10) -> list[RetrievedChunk]:
         """Score all chunks against query tokens using standard BM25 formula."""

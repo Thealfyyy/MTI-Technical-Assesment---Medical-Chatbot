@@ -36,6 +36,9 @@ All open-weights artifacts were verified against Hugging Face metadata, download
 
 Both benchmarks evaluated the exact same 16 labeled evaluation cases (`DEV-01`..`DEV-10` public dev questions + `CHAL-11`..`CHAL-16` challenge cases) across 247 section chunks parsed from the 9 DOCX documents (`data/kb_manifest.yaml`).
 
+> **Chunking note:** every figure below is a Phase 1 measurement on that 247-chunk section-level index. Phase 2 re-chunked the same nine documents at sub-section level, and the active `data/chroma` index now holds 414 chunks, so current prompt-token and latency numbers will differ from these baselines.
+
+
 - **Laptop Environment (CPU Fallback)**:
   - **Host / Model**: `Alfy` / `Dell Inc. Latitude 3410`
   - **CPU**: Intel Core i5-10210U (4 physical cores / 8 logical processors @ 1.60 GHz)

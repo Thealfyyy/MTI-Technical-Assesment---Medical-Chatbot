@@ -32,7 +32,8 @@ class SQLiteStore:
                     summary TEXT NOT NULL,
                     contact_name TEXT NOT NULL,
                     contact_method TEXT NOT NULL,
-                    created_at TEXT NOT NULL
+                    created_at TEXT NOT NULL,
+                    status TEXT NOT NULL DEFAULT 'pending'
                 );
                 CREATE TABLE IF NOT EXISTS conversations (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -50,14 +51,44 @@ class SQLiteStore:
                 );
                 """
             )
+            cols = [col[1] for col in connection.execute("PRAGMA table_info(handoffs)").fetchall()]
+            if "status" not in cols:
+                connection.execute("ALTER TABLE handoffs ADD COLUMN status TEXT NOT NULL DEFAULT 'pending'")
 
     def save_handoff(self, session_id: str, summary: str, contact_name: str, contact_method: str) -> int:
         with self._connect() as connection:
             cursor = connection.execute(
-                "INSERT INTO handoffs(session_id,summary,contact_name,contact_method,created_at) VALUES(?,?,?,?,?)",
-                (session_id, summary, contact_name, contact_method, datetime.now(timezone.utc).isoformat()),
+                "INSERT INTO handoffs(session_id,summary,contact_name,contact_method,created_at,status) VALUES(?,?,?,?,?,?)",
+                (session_id, summary, contact_name, contact_method, datetime.now(timezone.utc).isoformat(), "pending"),
             )
             return int(cursor.lastrowid)
+
+    def list_handoffs(self, limit: int = 50) -> list[dict[str, Any]]:
+        """Return recently submitted escalation handoff records for administrative review."""
+        with self._connect() as connection:
+            rows = connection.execute(
+                "SELECT id, session_id, summary, contact_name, contact_method, created_at, status FROM handoffs ORDER BY id DESC LIMIT ?",
+                (limit,),
+            ).fetchall()
+        return [dict(row) for row in rows]
+
+    def update_handoff_status(self, handoff_id: int, status: str) -> bool:
+        """Update handoff status, e.g. 'pending' or 'handled'."""
+        with self._connect() as connection:
+            cursor = connection.execute(
+                "UPDATE handoffs SET status = ? WHERE id = ?",
+                (status, handoff_id),
+            )
+            return cursor.rowcount > 0
+
+    def delete_handoff(self, handoff_id: int) -> bool:
+        """Delete an escalation handoff record by id."""
+        with self._connect() as connection:
+            cursor = connection.execute(
+                "DELETE FROM handoffs WHERE id = ?",
+                (handoff_id,),
+            )
+            return cursor.rowcount > 0
 
     def record_conversation(
         self,
@@ -132,4 +163,12 @@ class SQLiteStore:
                 (session_id,),
             ).fetchone()
         return dict(row) if row else None
+
+    def clear_analytics(self) -> int:
+        """Zero out conversation analytics records while preserving handoff records."""
+        with self._connect() as connection:
+            cursor = connection.execute("DELETE FROM conversations")
+            count = cursor.rowcount
+        return int(count)
+
 

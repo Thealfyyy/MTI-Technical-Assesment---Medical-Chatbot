@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"inverse-surface":"#233145","primary-fixed-dim":"#aec6ff","on-tertiary-fixed":"#311300","on-primary-container":"#b9ceff","surface-container":"#e6eeff","error":"#ba1a1a","on-primary-fixed":"#001a42","outline-variant":"#c3c6d3","tertiary":"#693000","inverse-primary":"#aec6ff","on-error-container":"#93000a","on-primary-fixed-variant":"#054394","surface-container-high":"#dde9ff","background":"#f8f9ff","surface-dim":"#cddbf4","on-primary":"#ffffff","surface-container-lowest":"#ffffff","primary-container":"#2455a6","secondary-fixed":"#dce3ee","surface-container-low":"#eff3ff","on-secondary-container":"#5e656e","tertiary-fixed-dim":"#ffb688","surface-variant":"#d5e3fd","on-secondary":"#ffffff","on-tertiary-fixed-variant":"#733600","outline":"#737783","primary-fixed":"#d8e2ff","tertiary-container":"#8c4300","primary":"#003d89","on-secondary-fixed-variant":"#404750","on-secondary-fixed":"#151c24","secondary":"#585f68","inverse-on-surface":"#ebf1ff","surface":"#f8f9ff","secondary-container":"#dce3ee","on-surface":"#0e1c2f","surface-bright":"#f8f9ff","on-tertiary":"#ffffff","on-background":"#0e1c2f","on-tertiary-container":"#ffc099","error-container":"#ffdad6","on-surface-variant":"#434751","surface-container-highest":"#d5e3fd","on-error":"#ffffff","surface-tint":"#2d5cad","secondary-fixed-dim":"#c0c7d2","tertiary-fixed":"#ffdbc7"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-lg":"1.5rem","margin-tablet":"1.5rem","margin-desktop":"2rem","space-xl":"2rem","margin":"1rem","gutter":"1rem","space-xs":"0.25rem","space-md":"1rem","gutter-desktop":"1.5rem","space-sm":"0.5rem"},fontFamily:{"tabular-data":["Inter"],"body-lg":["Inter"],"headline-sm":["Inter"],"display":["Inter"],"label-sm":["Inter"],"label-md":["Inter"],"body-md":["Inter"],"headline-md":["Inter"],"body-sm":["Inter"],"headline-lg-mobile":["Inter"],"headline-lg":["Inter"]},fontSize:{"tabular-data":["14px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"400"}],"body-lg":["16px",{"lineHeight":"26px","letterSpacing":"0em","fontWeight":"400"}],"headline-sm":["18px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"600"}],"display":["36px",{"lineHeight":"44px","letterSpacing":"-0.02em","fontWeight":"600"}],"label-sm":["12px",{"lineHeight":"16px","letterSpacing":"0.01em","fontWeight":"500"}],"label-md":["14px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"500"}],"body-md":["15px",{"lineHeight":"24px","letterSpacing":"0em","fontWeight":"400"}],"headline-md":["22px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-sm":["13px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"400"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-lg":["28px",{"lineHeight":"36px","letterSpacing":"-0.02em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 w-full px-margin-desktop flex items-center justify-between"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center select-none shadow-[0_2px_4px_rgba(0,0,0,0.04)]"><span class="font-headline-md text-headline-md text-on-primary font-bold leading-none">M</span></div><div class="flex flex-col justify-center"><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant leading-tight">Pharmacy System</span><span class="font-headline-sm text-headline-sm text-on-surface leading-tight">MTI · Knowledge Assistant</span></div></div><nav class="flex items-center gap-space-xs ml-space-md" data-active-classes="bg-surface-container-low text-primary font-semibold shadow-[inset_0_-2px_0_0_#2455a6]"><a class="font-label-md text-label-md px-space-md py-space-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150" data-path="assistant-chat" href="#">Assistant (Chat)</a><a aria-current="page" class="px-space-md py-space-sm rounded-lg transition-colors duration-150 bg-surface-container-low text-primary font-semibold shadow-[inset_0_-2px_0_0_#2455a6]" data-path="admin-operations" href="#">Admin Operations</a></nav></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs py-space-xs px-space-sm rounded-full bg-surface-container-low select-none" title="System health operational"><span class="w-2 h-2 rounded-full bg-[#19734E]"></span><span class="font-label-sm text-label-sm font-medium text-on-surface">Service ready</span><span class="font-label-sm text-label-sm text-outline font-tabular-data">· Checked against /health</span></div></div></div></header><main class="w-full pt-16 min-h-screen bg-surface px-margin-desktop py-space-lg"><div class="flex flex-col w-full">
+<div class="flex w-full gap-space-lg items-start">
+<!-- Admin Sidebar Navigation -->
+<aside class="w-60 shrink-0 bg-surface-container-lowest rounded-xl shadow-sm p-space-md flex flex-col gap-space-xs select-none">
+<div class="px-space-sm py-space-xs mb-space-xs flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Clinical Repositories</span>
+<span class="font-label-sm text-label-sm px-space-xs py-0.5 rounded-full bg-surface-container-high text-primary font-tabular-data">v2.4</span>
+</div>
+<a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="font-label-md text-label-md">System Overview</span>
+</a>
+<!-- Active Menu Item: Documents -->
+<a class="flex items-center justify-between px-space-sm py-space-sm rounded-lg bg-surface-container text-primary font-semibold shadow-sm transition-colors" href="#">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">folder_managed</span>
+<span class="font-label-md text-label-md">Documents</span>
+</div>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded-full bg-primary-container text-on-primary font-tabular-data">9</span>
+</a>
+<a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">dataset</span>
+<span class="font-label-md text-label-md">Vector Stores &amp; Sync</span>
+</a>
+<a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">medical_services</span>
+<span class="font-label-md text-label-md">Drug Monograph Meta</span>
+</a>
+<a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">policy</span>
+<span class="font-label-md text-label-md">Safety Boundaries</span>
+</a>
+<a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">history_toggle_off</span>
+<span class="font-label-md text-label-md">Audit Logs &amp; Revisions</span>
+</a>
+<div class="mt-space-lg pt-space-md bg-surface-container-low rounded-lg p-space-sm flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-primary">dns</span>
+<span class="font-label-sm text-label-sm font-semibold">Chroma Vector DB</span>
+</div>
+<div class="flex items-center justify-between text-outline font-label-sm text-label-sm">
+<span>Embeddings</span>
+<span class="font-tabular-data text-on-surface">1,123 chunks</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary-container h-full rounded-full w-[78%]"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline pt-space-xs">Sync state: Operational</span>
+</div>
+</aside>
+<!-- Main Workspace -->
+<div class="flex-1 flex flex-col min-w-0 gap-space-lg">
+<!-- Top Warning Banner -->
+<section class="bg-tertiary-fixed/30 rounded-lg p-space-md shadow-sm flex items-start gap-space-md" role="alert">
+<div class="w-8 h-8 rounded-full bg-tertiary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-tertiary text-[20px]">warning</span>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-label-md text-label-md font-semibold text-on-tertiary-fixed leading-tight">Store Partition Notice</h3>
+<p class="font-body-sm text-body-sm text-tertiary mt-0.5">
+            Uploaded source files and the vector index are separate stores; a crash between commits may require a rebuild.
+          </p>
+</div>
+<button class="font-label-sm text-label-sm font-medium text-tertiary hover:text-on-tertiary-fixed underline px-space-xs py-0.5" type="button">
+          View Sync Protocol
+        </button>
+</section>
+<!-- Knowledge Base Section Header -->
+<header class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<h1 class="font-headline-md text-headline-md text-on-surface font-semibold tracking-tight">
+              Knowledge base documents
+            </h1>
+<span class="font-label-sm text-label-sm px-space-sm py-0.5 rounded-full bg-surface-container text-primary font-medium">
+              9 approved sources
+            </span>
+</div>
+<p class="font-body-md text-body-md text-outline mt-0.5">
+            KB-01 through KB-09 form the strict grounding boundary for all clinical responses.
+          </p>
+</div>
+<div class="flex items-center gap-space-sm shrink-0">
+<!-- Rebuild Vector Index Trigger -->
+<button class="h-11 px-space-md rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-space-xs shadow-sm font-label-md text-label-md" onclick="triggerRebuildNotice()" type="button">
+<span class="material-symbols-outlined text-[18px]">build_circle</span>
+<span>Rebuild Vector Index</span>
+</button>
+<!-- Upload .docx Trigger Modal A -->
+<button class="h-11 px-space-lg rounded-lg bg-primary-container hover:bg-primary text-on-primary transition-colors flex items-center gap-space-xs shadow-sm font-label-md text-label-md font-medium" onclick="openUploadModal()" type="button">
+<span class="material-symbols-outlined text-[18px]">cloud_upload</span>
+<span>Upload .docx</span>
+</button>
+</div>
+</header>
+<!-- Repository Document Table & Actions Container -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<!-- Table Control & Filter Bar -->
+<div class="p-space-md bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-space-sm select-none">
+<div class="flex items-center gap-space-sm w-full sm:w-auto">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Scope:</span>
+<span class="font-label-sm text-label-sm px-space-sm py-1 rounded bg-surface-container-lowest text-on-surface font-medium shadow-sm">All Clinical Guidelines</span>
+<span class="font-label-sm text-label-sm text-outline">·</span>
+<span class="font-label-sm text-label-sm text-outline">Language: Arabic/English Bilingual Pairs</span>
+</div>
+<div class="flex items-center gap-space-md text-outline font-label-sm text-label-sm">
+<span>Total Grounding Units: <strong class="text-on-surface font-tabular-data">1,123 Chunks</strong></span>
+</div>
+</div>
+<!-- Document List / Data Rows -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-space-sm px-space-md text-left font-semibold">Source Identifier</th>
+<th class="py-space-sm px-space-md text-left font-semibold">Document Title / Clinical Protocol</th>
+<th class="py-space-sm px-space-md text-left font-semibold">Segmentation</th>
+<th class="py-space-sm px-space-md text-left font-semibold">Indexing Age</th>
+<th class="py-space-sm px-space-md text-left font-semibold">Grounding Status</th>
+<th class="py-space-sm px-space-md text-right font-semibold">Repository Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<!-- KB-01 -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-space-md px-space-md font-tabular-data font-semibold text-primary">KB-01</td>
+<td class="py-space-md px-space-md min-w-[280px]">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-medium text-on-surface" dir="rtl">دليل الممارسة الإكلينيكية في الجراحة والصدمات</span>
+<span class="font-body-sm text-body-sm text-outline">Clinical Practice Guidelines</span>
+</div>
+</td>
+<td class="py-space-md px-space-md font-tabular-data text-on-surface">142 chunks</td>
+<td class="py-space-md px-space-md font-body-sm text-body-sm text-outline font-tabular-data">Indexed 2h ago</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E8F5EE] text-[#19734E] font-label-sm text-label-sm font-semibold select-none">
+<span class="w-1.5 h-1.5 rounded-full bg-[#19734E]"></span>
+                    Active
+                  </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="font-label-sm text-label-sm px-space-sm py-1.5 rounded text-primary hover:bg-surface-container font-medium transition-colors" onclick="openUploadModal('KB-01')" type="button">Replace .docx</button>
+<button class="font-label-sm text-label-sm px-space-sm py-1.5 rounded text-error hover:bg-error-container/40 font-medium transition-colors" onclick="openRemovalModal('KB-01', 'دليل الممارسة الإكلينيكية في الجراحة والصدمات')" type="button">Remove</button>
+</div>
+</td>
+</tr>
+<!-- KB-02 -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-space-md px-space-md font-tabular-data font-semibold text-primary">KB-02</td>
+<td class="py-space-md px-space-md min-w-[280px]">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-medium text-on-surface" dir="rtl">أدوية قرحة المعدة والحموضة</span>
+<span class="font-body-sm text-body-sm text-outline">Peptic Ulcer &amp; GERD Guidelines</span>
+</div>
+</td>
+<td class="py-space-md px-space-md font-tabular-data text-on-surface">98 chunks</td>
+<td class="py-space-md px-space-md font-body-sm text-body-sm text-outline font-tabular-data">Indexed yesterday</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E8F5EE] text-[#19734E] font-label-sm text-label-sm font-semibold select-none">
+<span class="w-1.5 h-1.5 rounded-full bg-[#19734E]"></span>
+                    Active
+                  </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="font-label-sm text-label-sm px-space-sm py-1.5 rounded text-primary hover:bg-surface-container font-medium transition-colors" onclick="openUploadModal('KB-02')" type="button">Replace .docx</button>
+<button class="font-label-sm text-label-sm px-space-sm py-1.5 rounded text-error hover:bg-error-container/40 font-medium transition-colors" onclick="openRemovalModal('KB-02', 'أدوية قرحة المعدة والحموضة – Peptic Ulcer &amp; GERD Guidelines')" type="button">Remove</button>
+</div>
+</td>
+</tr>
+<!-- KB-03 -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-space-md px-space-md font-tabular-data font-semibold text-primary">KB-03</td>
+<td class="py-space-md px-space-md min-w-[280px]">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-medium text-on-surface" dir="rtl">إرشادات منظمة الصحة العالمية للوقاية من عدوى العمليات</span>
+<span class="font-body-sm text-body-sm text-outline">WHO Surgical Site Infection (SSI) Prevention</span>
+</div>
+</td>
+<td class="py-space-md px-space-md font-tabular-data text-on-surface">210 chunks</td>
+<td class="py-space-md px-space-md font-body-sm text-body-sm text-outline font-tabular-data">Indexed 3d ago</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E8F5EE] text-[#19734E] font-label-sm text-label-sm font-semibold select-none">
+<span class="w-1.5 h-1.5 rounded-full bg-[#19734E]"></span>
+                    Active
+                  </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="font-label-sm text-label-sm px-space-sm py-1.5 rounded text-primary hover:bg-surface-container font-medium transition-colors" onclick="openUploadModal('KB-03')" type="button">Replace .docx</button>
+<button class="font-label-sm text-label-sm px-space-sm py-1.5 rounded text-error hover:bg-error-container/40 font-medium transition-colors" onclick="openRemovalModal('KB-03', 'إرشادات منظمة الصحة العالمية للوقاية من عدوى العمليات (WHO SSI)')" type="button">Remove</button>
+</div>
+</td>
+</tr>
+<!-- KB-04: Needs rebuild status -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low/60 transition-colors">
+<td class="py-space-md px-space-md font-tabular-data font-semibold text-primary">KB-04</td>
+<td class="py-space-md px-space-md min-w-[280px]">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-medium text-on-surface" dir="rtl">الدليل الدوائي لمستحضرات القلب والأوعية الدموية</span>
+<span class="font-body-sm text-body-sm text-outline">Cardiovascular Pharmacotherapy Compendium</span>
+</div>
+</td>
+<td class="py-space-md px-space-md font-tabular-data text-on-surface">164 chunks</td>
+<td class="py-space-md px-space-md font-body-sm text-body-sm text-outline font-tabular-data">Indexed 5d ago</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#FFF4DF] text-[#81540B] font-label-sm text-label-sm font-semibold select-none">
+<span class="material-symbols-outlined text-[14px]">sync_problem</span>
+                    Needs rebuild
+                  </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="font-label-sm text-label-sm px-space-sm py-1.5 rounded bg-tertiary-container/20 text-tertiary hover:bg-tertiary-container/30 font-medium transition-colors" onclick="reindexRow('KB-04')" type="button">Re-index</button>
+<button class="font-label-sm text-label-sm px-space-sm py-1.5 rounded text-primary hover:bg-surface-container font-medium transition-colors" onclick="openUploadModal('KB-04')" type="button">Replace .docx</button>
+</div>
+</td>
+</tr>
+<!-- KB-05 -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-space-md px-space-md font-tabular-data font-semibold text-primary">KB-05</td>
+<td class="py-space-md px-space-md min-w-[280px]">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-medium text-on-surface" dir="rtl">قائمة المضادات الحيوية المصرح بها والبروتوكول المقنن</span>
+<span class="font-body-sm text-body-sm text-outline">Authorized Antibiotics Formulary &amp; Stewardship</span>
+</div>
+</td>
+<td class="py-space-md px-space-md font-tabular-data text-on-surface">188 chunks</td>
+<td class="py-space-md px-space-md font-body-sm text-body-sm text-outline font-tabular-data">Indexed 1w ago</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E8F5EE] text-[#19734E] font-label-sm text-label-sm font-semibold select-none">
+<span class="w-1.5 h-1.5 rounded-full bg-[#19734E]"></span>
+                    Active
+                  </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="font-label-sm text-label-sm px-space-sm py-1.5 rounded text-primary hover:bg-surface-container font-medium transition-colors" onclick="openUploadModal('KB-05')" type="button">Replace .docx</button>
+<button class="font-label-sm text-label-sm px-space-sm py-1.5 rounded text-error hover:bg-error-container/40 font-medium transition-colors" onclick="openRemovalModal('KB-05', 'قائمة المضادات الحيوية المصرح بها والبروتوكول المقنن')" type="button">Remove</button>
+</div>
+</td>
+</tr>
+<!-- KB-06 -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-space-md px-space-md font-tabular-data font-semibold text-primary">KB-06</td>
+<td class="py-space-md px-space-md min-w-[280px]">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-medium text-on-surface" dir="rtl">الدليل الإرشادي للتداخلات الدوائية الشائعة</span>
+<span class="font-body-sm text-body-sm text-outline">Common Drug-Drug Adverse Interaction Matrix</span>
+</div>
+</td>
+<td class="py-space-md px-space-md font-tabular-data text-on-surface">112 chunks</td>
+<td class="py-space-md px-space-md font-body-sm text-body-sm text-outline font-tabular-data">Indexed 1w ago</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E8F5EE] text-[#19734E] font-label-sm text-label-sm font-semibold select-none">
+<span class="w-1.5 h-1.5 rounded-full bg-[#19734E]"></span>
+                    Active
+                  </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="font-label-sm text-label-sm px-space-sm py-1.5 rounded text-primary hover:bg-surface-container font-medium transition-colors" onclick="openUploadModal('KB-06')" type="button">Replace .docx</button>
+<button class="font-label-sm text-label-sm px-space-sm py-1.5 rounded text-error hover:bg-error-container/40 font-medium transition-colors" onclick="openRemovalModal('KB-06', 'الدليل الإرشادي للتداخلات الدوائية الشائعة')" type="button">Remove</button>
+</div>
+</td>
+</tr>
+<!-- KB-07 -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-space-md px-space-md font-tabular-data font-semibold text-primary">KB-07</td>
+<td class="py-space-md px-space-md min-w-[280px]">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-medium text-on-surface" dir="rtl">دليل وزارة الصحة للاستخدام الرشيد للدواء</span>
+<span class="font-body-sm text-body-sm text-outline">Rational Drug Use National Directive</span>
+</div>
+</td>
+<td class="py-space-md px-space-md font-tabular-data text-on-surface">95 chunks</td>
+<td class="py-space-md px-space-md font-body-sm text-body-sm text-outline font-tabular-data">Indexed 2w ago</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E8F5EE] text-[#19734E] font-label-sm text-label-sm font-semibold select-none">
+<span class="w-1.5 h-1.5 rounded-full bg-[#19734E]"></span>
+                    Active
+                  </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="font-label-sm text-label-sm px-space-sm py-1.5 rounded text-primary hover:bg-surface-container font-medium transition-colors" onclick="openUploadModal('KB-07')" type="button">Replace .docx</button>
+<button class="font-label-sm text-label-sm px-space-sm py-1.5 rounded text-error hover:bg-error-container/40 font-medium transition-colors" onclick="openRemovalModal('KB-07', 'دليل وزارة الصحة للاستخدام الرشيد للدواء')" type="button">Remove</button>
+</div>
+</td>
+</tr>
+<!-- KB-08 -->
+<tr class="hover:bg-surface-container-low/60 transition-colors">
+<td class="py-space-md px-space-md font-tabular-data font-semibold text-primary">KB-08</td>
+<td class="py-space-md px-space-md min-w-[280px]">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-medium text-on-surface" dir="rtl">معايير الجرعات لمرضى القصور الكلوي والكبدي</span>
+<span class="font-body-sm text-body-sm text-outline">Renal &amp; Hepatic Impairment Dosing Criteria</span>
+</div>
+</td>
+<td class="py-space-md px-space-md font-tabular-data text-on-surface">130 chunks</td>
+<td class="py-space-md px-space-md font-body-sm text-body-sm text-outline font-tabular-data">Indexed 2w ago</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E8F5EE] text-[#19734E] font-label-sm text-label-sm font-semibold select-none">
+<span class="w-1.5 h-1.5 rounded-full bg-[#19734E]"></span>
+                    Active
+                  </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="font-label-sm text-label-sm px-space-sm py-1.5 rounded text-primary hover:bg-surface-container font-medium transition-colors" onclick="openUploadModal('KB-08')" type="button">Replace .docx</button>
+<button class="font-label-sm text-label-sm px-space-sm py-1.5 rounded text-error hover:bg-error-container/40 font-medium transition-colors" onclick="openRemovalModal('KB-08', 'معايير الجرعات لمرضى القصور الكلوي والكبدي')" type="button">Remove</button>
+</div>
+</td>
+</tr>
+<!-- KB-09: Deleted (tombstone) -->
+<tr class="bg-surface-container-low/40 opacity-70 hover:opacity-90 transition-opacity">
+<td class="py-space-md px-space-md font-tabular-data font-semibold text-outline">KB-09</td>
+<td class="py-space-md px-space-md min-w-[280px]">
+<div class="flex flex-col line-through text-outline">
+<span class="font-body-md text-body-md" dir="rtl">بروتوكول المستودع الصيدلي وحفظ اللقاحات والأمصال</span>
+<span class="font-body-sm text-body-sm">Cold Chain Storage &amp; Vaccine Handling Protocol</span>
+</div>
+</td>
+<td class="py-space-md px-space-md font-tabular-data text-outline">76 chunks</td>
+<td class="py-space-md px-space-md font-body-sm text-body-sm text-outline font-tabular-data">Indexed 3w ago</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container text-secondary font-label-sm text-label-sm font-semibold select-none">
+<span class="material-symbols-outlined text-[14px]">archive</span>
+                    Deleted (tombstone)
+                  </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="font-label-sm text-label-sm px-space-sm py-1.5 rounded text-primary hover:bg-surface-container font-medium transition-colors" onclick="restoreTombstone('KB-09')" type="button">Restore</button>
+<button class="font-label-sm text-label-sm px-space-sm py-1.5 rounded text-error hover:bg-error-container/40 font-medium transition-colors" onclick="purgeTombstone('KB-09')" type="button">Purge</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-space-md bg-surface-container-lowest flex items-center justify-between">
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-outline">
+<span class="material-symbols-outlined text-[16px] text-[#19734E]">verified_user</span>
+<span>All 9 documents validated against Clinical Protocol ISO-22870 standards</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline font-tabular-data">Vector sync check: 100% compliant</span>
+</div>
+</section>
+<!-- Modals Showcase Grid / Interactivity Sandbox -->
+<section class="mt-space-lg flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Modal Interactions Showcase</h2>
+<p class="font-body-sm text-body-sm text-outline">Live preview of the dialog flows for administrative governance and clinical safety enforcement.</p>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-outline">Interactive Modals previewed below</span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-space-lg">
+<!-- MODAL A: Upload .docx Drop-zone Modal (Demonstrated in-flow) -->
+<div class="w-full max-w-[520px] mx-auto bg-surface-container-lowest rounded-xl shadow-xl p-space-lg flex flex-col gap-space-md relative" id="modal-upload-preview">
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Upload approved monograph (.docx)</h3>
+<span class="font-label-sm text-label-sm text-outline mt-0.5">Existing KB IDs only · max 15 MiB</span>
+</div>
+<button class="w-8 h-8 rounded-full hover:bg-surface-container flex items-center justify-center text-outline hover:text-on-surface transition-colors" title="Close dialog" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Target KB ID dropdown selector -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-sm text-label-sm font-semibold text-on-surface" for="kb-target-selector">Target Monograph Record</label>
+<select class="h-11 px-3.5 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none" id="kb-target-selector">
+<option value="KB-01">KB-01: دليل الممارسة الإكلينيكية في الجراحة والصدمات</option>
+<option selected="" value="KB-02">KB-02: أدوية قرحة المعدة والحموضة (GERD)</option>
+<option value="KB-03">KB-03: إرشادات منظمة الصحة العالمية للوقاية (SSI)</option>
+<option value="KB-04">KB-04: الدليل الدوائي لمستحضرات القلب والأوعية</option>
+<option value="KB-05">KB-05: قائمة المضادات الحيوية المصرح بها</option>
+</select>
+</div>
+<!-- Drag and Drop Zone -->
+<div class="relative group rounded-xl p-space-lg flex flex-col items-center justify-center gap-space-xs text-center cursor-pointer transition-colors bg-surface-container-low/70 hover:bg-surface-container-low">
+<!-- Upload Cloud Glyph -->
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary mb-1">
+<span class="material-symbols-outlined text-[28px]">cloud_upload</span>
+</div>
+<p class="font-label-md text-label-md font-medium text-on-surface">
+                Drag your <span class="font-semibold text-primary">.docx</span> file here or <span class="text-primary underline">browse</span>
+</p>
+<p class="font-label-sm text-label-sm text-outline">Microsoft Word OpenXML documents only</p>
+<input accept=".docx" class="absolute inset-0 opacity-0 cursor-pointer" type="file"/>
+</div>
+<!-- Validation Error Callouts Style Showcase -->
+<div class="flex flex-col gap-space-xs">
+<!-- Alert 1: Invalid File Type -->
+<div class="p-2.5 rounded-lg bg-error-container text-on-error-container flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-error shrink-0">error</span>
+<span class="font-label-sm text-label-sm leading-tight">
+<strong>Invalid file type:</strong> .pdf not accepted. Only valid .docx documents are permitted.
+                </span>
+</div>
+<!-- Alert 2: Oversized Limit -->
+<div class="p-2.5 rounded-lg bg-error-container text-on-error-container flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-error shrink-0">speed</span>
+<span class="font-label-sm text-label-sm leading-tight">
+<strong>Size boundary exceeded:</strong> File size 18.4 MiB exceeds the 15 MiB limit.
+                </span>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="flex items-center justify-end gap-space-sm pt-space-sm">
+<button class="h-11 px-space-md rounded-lg font-label-md text-label-md text-outline hover:text-on-surface transition-colors" type="button">
+                Cancel
+              </button>
+<button class="h-11 px-space-lg rounded-lg bg-primary-container text-on-primary hover:bg-primary font-label-md text-label-md font-medium shadow-sm transition-colors flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[18px]">done_all</span>
+<span>Upload and commit</span>
+</button>
+</div>
+</div>
+<!-- MODAL B: Confirm Removal & Tombstone Dialog -->
+<div class="w-full max-w-[500px] mx-auto bg-surface-container-lowest rounded-xl shadow-xl p-space-lg flex flex-col justify-between gap-space-md" id="modal-remove-preview">
+<div>
+<div class="flex items-start gap-space-md">
+<div class="w-10 h-10 rounded-full bg-error-container text-error flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[24px]">delete_forever</span>
+</div>
+<div class="flex-1 flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">
+                    Remove document KB-02 from active grounding?
+                  </h3>
+<span class="font-label-sm text-label-sm text-outline mt-0.5 font-tabular-data">Source: أدوية قرحة المعدة والحموضة (GERD Guidelines)</span>
+</div>
+</div>
+<div class="mt-space-md p-space-md bg-surface-container-low rounded-lg">
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                  The document will leave the active vector index immediately. A tombstone record will persist in SQLite to prevent accidental re-indexing during automated rebuilds.
+                </p>
+<div class="mt-space-sm flex items-center gap-space-xs text-outline font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-tertiary">info</span>
+<span>Affected active chunks: <strong class="text-on-surface font-tabular-data">98 chunks</strong></span>
+</div>
+</div>
+</div>
+<!-- Modal Action Buttons -->
+<div class="flex items-center justify-end gap-space-sm pt-space-sm">
+<button class="h-11 px-space-md rounded-lg font-label-md text-label-md text-outline hover:text-on-surface hover:bg-surface-container-low transition-colors" type="button">
+                Cancel
+              </button>
+<button class="h-11 px-space-lg rounded-lg bg-error text-on-error hover:opacity-90 font-label-md text-label-md font-medium shadow-sm transition-colors flex items-center gap-space-xs" onclick="executeTombstoneDemo()" type="button">
+<span class="material-symbols-outlined text-[18px]">archive</span>
+<span>Confirm tombstone removal</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</div>
+<script>
+  function openUploadModal(kbId) {
+    const sel = document.getElementById('kb-target-selector');
+    if (sel && kbId) {
+      sel.value = kbId;
+    }
+    const target = document.getElementById('modal-upload-preview');
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.add('ring-2', 'ring-primary');
+      setTimeout(() => target.classList.remove('ring-2', 'ring-primary'), 1400);
+    }
+  }
+
+  function openRemovalModal(kbId, name) {
+    const target = document.getElementById('modal-remove-preview');
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.add('ring-2', 'ring-error');
+      setTimeout(() => target.classList.remove('ring-2', 'ring-error'), 1400);
+    }
+  }
+
+  function triggerRebuildNotice() {
+    alert("Rebuild sequence initiated for Chroma Vector DB. All 9 authorized KB sources will be re-segmented into strict bilingual chunks.");
+  }
+
+  function reindexRow(kbId) {
+    alert("Re-indexing process scheduled for " + kbId + ". Embeddings will refresh in the background.");
+  }
+
+  function restoreTombstone(kbId) {
+    alert("Document " + kbId + " restored from tombstone store. Rebuilding vector chunks.");
+  }
+
+  function purgeTombstone(kbId) {
+    if (confirm("Permanently purge " + kbId + " from cold storage? This cannot be undone.")) {
+      alert(kbId + " purged from administrative ledger.");
+    }
+  }
+
+  function executeTombstoneDemo() {
+    alert("Action Confirmed: KB-02 moved to tombstone record. Vector index updated.");
+  }
+</script></main><footer class="w-full bg-surface-container-lowest mt-auto shadow-[0_-1px_6px_rgba(0,0,0,0.02)]"><div class="w-full px-margin-desktop py-space-md flex flex-col sm:flex-row items-center justify-between gap-space-sm text-outline"><span class="font-label-sm text-label-sm">© Medical Knowledge Intelligence · Clinical Operational Dispensary Interface</span><div class="flex items-center gap-space-md font-tabular-data font-label-sm text-label-sm"><span>Bilingual Engine v2.4</span><span>Latency: 24ms</span></div></div></footer></body></html>

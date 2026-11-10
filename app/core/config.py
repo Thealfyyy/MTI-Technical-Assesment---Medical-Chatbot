@@ -42,6 +42,10 @@ class Settings:
     embedding_model_name: str
     embedding_model_revision: str = ""
     embedding_device: str = "cpu"
+    admin_auth_enabled: bool = False
+    admin_username: str = "admin"
+    admin_password: str = "admin123"
+    admin_secret_token: str = "mti-admin-secret-2026"
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -78,6 +82,10 @@ class Settings:
             embedding_model_name=os.getenv("EMBEDDING_MODEL_NAME", "BAAI/bge-m3"),
             embedding_model_revision=os.getenv("EMBEDDING_MODEL_REVISION", ""),
             embedding_device=os.getenv("EMBEDDING_DEVICE", "cpu"),
+            admin_auth_enabled=os.getenv("ADMIN_AUTH_ENABLED", "false").lower() in ("1", "true", "yes"),
+            admin_username=os.getenv("ADMIN_USERNAME", "admin"),
+            admin_password=os.getenv("ADMIN_PASSWORD", "admin123"),
+            admin_secret_token=os.getenv("ADMIN_SECRET_TOKEN", "mti-admin-secret-2026"),
         )
 
 

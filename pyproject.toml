@@ -21,7 +21,7 @@ dependencies = [
     "PyYAML==6.0.2",
     "httpx==0.28.1",
     "sentence-transformers==3.3.1",
-    "chromadb==0.6.3",
+    "chromadb==1.5.9",
     "python-multipart==0.0.20",
     "python-dotenv==1.2.4",
 ]
@@ -31,6 +31,12 @@ dev = [
     "pytest==8.3.4",
     "pytest-asyncio==0.25.2",
 ]
+
+[tool.setuptools.packages.find]
+# Only the application package is installed; tests, evaluation and data are
+# run from the checkout. Without this, setuptools' flat-layout discovery
+# rejects the repository because Docs/, data/ and evaluation/ are present.
+include = ["app*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

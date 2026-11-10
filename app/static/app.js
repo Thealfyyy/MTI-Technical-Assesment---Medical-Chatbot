@@ -36,7 +36,7 @@ function addAssistantMessage(result) {
   bubble.dir = result.language === "ar" ? "rtl" : "auto";
   const status = node("span", `status ${result.status}`, result.status.replaceAll("_", " "));
   bubble.append(status, document.createElement("br"), node("span", "answer", result.answer));
-  if (result.citations.length) {
+  if (result.citations && result.citations.length) {
     const list = node("div", "citations");
     for (const citation of result.citations) {
       const item = node("div", "citation");
@@ -102,6 +102,25 @@ chatForm.addEventListener("submit", async (event) => {
   }
 });
 
+// Immediate send on Enter key (Shift+Enter for newline)
+messageInput.addEventListener("keydown", (event) => {
+  if ((event.key === "Enter" || event.keyCode === 13) && !event.shiftKey) {
+    event.preventDefault();
+    if (!sendButton.disabled && messageInput.value.trim()) {
+      chatForm.dispatchEvent(new Event("submit", { cancelable: true }));
+    }
+  }
+});
+
+function dismissHandoff() {
+  handoffPanel.hidden = true;
+  handoffResult.textContent = "";
+  handoffForm.reset();
+}
+
+document.getElementById("handoff-close-btn")?.addEventListener("click", dismissHandoff);
+document.getElementById("handoff-dismiss-btn")?.addEventListener("click", dismissHandoff);
+
 handoffForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   handoffResult.textContent = "Saving…";
@@ -118,8 +137,9 @@ handoffForm.addEventListener("submit", async (event) => {
     });
     const result = await response.json();
     if (!response.ok) throw new Error(result.detail || "Could not save handoff details.");
-    handoffResult.textContent = result.message;
+    handoffResult.textContent = result.message + " (Closing...)";
     handoffForm.reset();
+    setTimeout(dismissHandoff, 3500);
   } catch (error) {
     handoffResult.textContent = error.message;
   }

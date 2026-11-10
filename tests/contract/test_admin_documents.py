@@ -8,12 +8,13 @@ def test_document_upload_rejects_non_docx_before_indexing():
         "/admin/documents",
         data={"doc_id": "KB-01"},
         files={"file": ("source.txt", b"synthetic test payload", "text/plain")},
+        auth=("admin", "admin123"),
     )
     assert response.status_code == 415
     assert response.json()["detail"] == "Only .docx uploads are supported"
 
 
 def test_document_delete_rejects_unknown_id_without_touching_index():
-    response = TestClient(app).delete("/admin/documents/KB-99")
+    response = TestClient(app).delete("/admin/documents/KB-99", auth=("admin", "admin123"))
     assert response.status_code == 404
     assert response.json()["detail"] == "Unknown starter corpus document ID"

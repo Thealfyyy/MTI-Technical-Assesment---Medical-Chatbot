@@ -9,9 +9,10 @@ import tempfile
 from pathlib import Path
 
 import yaml
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from starlette.concurrency import run_in_threadpool
 
+from app.core.auth import require_admin
 from app.core.config import get_settings
 from app.ingestion.docx_parser import parse_docx_file
 from app.retrieval.embedder import get_embedder
@@ -19,7 +20,7 @@ from app.retrieval.service import get_retrieval_service
 from app.retrieval.vector_store import ChromaStore
 
 logger = logging.getLogger(__name__)
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(require_admin)])
 MAX_UPLOAD_BYTES = 15 * 1024 * 1024
 
 
@@ -61,6 +62,36 @@ def _index_docx(source: Path, doc_id: str, title: str) -> int:
         raise RuntimeError("Embedding count does not match parsed chunk count")
     count = ChromaStore().atomic_replace_document(doc_id, chunks, embeddings)
     return count
+
+
+@router.get("/admin/documents")
+def list_documents() -> list[dict[str, object]]:
+    """List all corpus documents, including their active chunk count and operational status."""
+    from collections import Counter
+    settings = get_settings()
+    manifest = yaml.safe_load(settings.kb_manifest_path.read_text(encoding="utf-8"))
+    deleted_ids = _read_deleted_ids()
+    store = ChromaStore()
+    all_chunks = store.get_all_chunks()
+    chunk_counts = Counter(c.metadata.doc_id for c in all_chunks)
+
+    docs: list[dict[str, object]] = []
+    for item in manifest.get("documents", []):
+        doc_id = item["doc_id"]
+        is_deleted = doc_id in deleted_ids
+        override_file = settings.uploads_dir / f"{doc_id}.docx"
+        is_replaced = override_file.is_file() and not is_deleted
+
+        status = "deleted" if is_deleted else ("replaced" if is_replaced else "active")
+        docs.append({
+            "doc_id": doc_id,
+            "title": item.get("title", doc_id),
+            "category": item.get("category", "General"),
+            "source_file": item.get("source_file", ""),
+            "chunks_count": chunk_counts.get(doc_id, 0),
+            "status": status,
+        })
+    return docs
 
 
 @router.post("/admin/documents")

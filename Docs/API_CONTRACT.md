@@ -38,6 +38,8 @@ This document mirrors the exact API contract defined in the MTI AI Solutions Tec
 - `citations`: Non-empty list of starter-corpus citations when `status == "answered"`; empty list `[]` when `status` is `"out_of_scope"` or `"escalated"`.
 - `doc_id`: Must be one of `KB-01` through `KB-09`.
 - `language`: `"ar"`, `"en"`, or `"mixed"`.
+- **Answer policy**: `answer` is composed prose in the question's language (Arabic for Arabic, Egyptian-dialect, or Franco-Arabic input; English for English; Arabic with English medical terms for mixed). The model must also return one to three verbatim evidence quotes; each quote is checked against the chunk it names and discarded if it does not match, so `answered` always has at least one verified span. A deterministic post-check rejects the composed text if it mentions a number or a drug/proper name absent from the cited passages, in which case the verified quotes are returned instead. This is a provenance check, not semantic entailment; answer accuracy and Arabic/Franco wording quality still require the manual review run.
+- The model may also escalate patient-specific advice that the deterministic pattern guard does not match (for example "what should I give him?"). Those responses are `escalated` with `citations: []`.
 - **Timeout & Error Contract**: Must respond within 30 seconds. On unhandled error or timeout, return `HTTP 500` with `{"error": "..."}`.
 
 ## 2. `GET /health`

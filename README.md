@@ -1,10 +1,10 @@
 # MTI Medical Knowledge Chatbot
 
-> **Current state:** Phases 3–6 implementation is in place; live model acceptance on the RTX 3090 PC remains outstanding. Containerization is intentionally not started until that review is complete.
+> **Current state:** Phases 3–6 implementation is in place and a first live acceptance run on the RTX 3090 PC is recorded in `evaluation/results/end_to_end_eval.json` (10/16 labeled cases pass; answer status was correct on 16/16). Containerization is intentionally not started until the factual review of that run is complete; see Session 30 in `project-continuity-skill/PROGRESS_LOG.md` for the failures and limitations.
 
 ## Purpose and boundaries
 
-A local multilingual retrieval-augmented chatbot for pharmacy staff, grounded only in the nine supplied documents (`KB-01` through `KB-09`). It returns verified source excerpts, abstains when it cannot verify a supporting quote, and short-circuits emergency or patient-specific dose patterns to an escalation response. This is an assessment prototype, not a clinically validated product. Use only public assessment questions or synthetic data; never enter real patient information.
+A local multilingual retrieval-augmented chatbot for pharmacy staff, grounded only in the nine supplied documents (`KB-01` through `KB-09`). It answers in the language of the question from retrieved passages, and each citation's `snippet` is a verbatim quote checked against the chunk it names. Every composed answer is also screened so it cannot introduce a number or drug/proper name absent from its cited passages; if it does, the verified quotes are returned instead. It abstains when no evidence verifies, and escalates emergency or patient-specific requests. This is an assessment prototype, not a clinically validated product. Use only public assessment questions or synthetic data; never enter real patient information.
 
 See [the project brief](project-continuity-skill/BRIEF.md) for architecture, decisions, metrics and boundaries, and [the task board](project-continuity-skill/TASKS.md) for current phase/gate status.
 
@@ -48,6 +48,17 @@ Prerequisites: Windows 11, Python 3.11+, shared HDD mounted, the Qwen3-8B Q4 GGU
    The runner writes `evaluation/results/end_to_end_eval.json` with case outcomes, status confusion, citation checks, required-fact substring proxy, forbidden-claim hits, latency and available per-session token counters. Review every answer and citation manually before drawing factual-accuracy conclusions. The automated fact matcher is not a human gold-label evaluation.
 
 The existing shared Chroma index and model caches are expected to be reused. Do not run a full ingestion rebuild unless intentionally rebuilding; it can take time and replaces the active index. If the index is absent, run `.venv-pc\Scripts\python.exe -m app.ingestion.run_ingestion --rebuild` after confirming the configured BGE-M3 model cache and manifest paths.
+
+## Using the web UI
+
+`GET /` serves the bundled UI from `app/static/` — there is no separate frontend build, dev server, or proxy, so the same uvicorn process is the whole application.
+
+- The header badge reflects `GET /health`. It reads "Service ready" only while llama-server answers; otherwise it reads "Service unavailable", `/health` returns `503`, and `POST /chat` returns `500` without an answer.
+- Each reply shows its `status`, the composed answer, and one card per citation with `doc_id`, title, section and the verified `snippet`. Answers are rendered right-to-left when `language` is `ar`.
+- The page keeps a `session_id` in `sessionStorage`. A new tab starts a new session; that ID is what `GET /admin/analytics/sessions/{session_id}` reports on.
+- An `escalated` reply opens the handoff panel, which stores synthetic contact details through `POST /handoff`. No clinician is contacted.
+- The browser aborts a request after 29 s while the API enforces `REQUEST_TIMEOUT_SECONDS` (default 28). Keep the API value below 29 s, or a slow run surfaces as a browser timeout instead of an answer.
+- There is no UI for the admin or analytics routes. Use Swagger at `http://127.0.0.1:8000/docs` or `curl` against loopback for those, and remember they are unauthenticated.
 
 ## API routes
 

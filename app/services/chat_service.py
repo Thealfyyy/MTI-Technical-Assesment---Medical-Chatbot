@@ -1,4 +1,4 @@
-"""Safety-first orchestration for retrieval, extractive generation, and citations."""
+"""Safety-first orchestration for retrieval, grounded generation, and citations."""
 
 from __future__ import annotations
 
@@ -6,18 +6,26 @@ import logging
 import time
 import uuid
 from dataclasses import dataclass
-from typing import Any
 
 from starlette.concurrency import run_in_threadpool
 
 from app.core.config import get_settings
+from app.generation.grounding import check_answer_grounding
 from app.generation.llm_client import LLMClient
 from app.retrieval.service import RetrievalService, get_retrieval_service
-from app.safety.guards import SafetyOutcome, classify_safety, detect_answer_language, response_language_for_query
+from app.safety.guards import (
+    SafetyOutcome,
+    classify_safety,
+    detect_answer_language,
+    response_language_for_query,
+    static_reply_language,
+)
 from app.schemas.api import ChatResponse
 from app.schemas.chunk import RetrievedChunk
 
 logger = logging.getLogger(__name__)
+
+SNIPPET_LIMIT = 280
 
 
 @dataclass
@@ -49,7 +57,7 @@ def _safe_escalation(language: str) -> str:
 
 
 class ChatService:
-    """Coordinates a deterministic safety gate with retrieval and source-quote selection."""
+    """Coordinates the deterministic safety gate with retrieval and grounded generation."""
 
     def __init__(self, retriever: RetrievalService | None = None, llm: LLMClient | None = None) -> None:
         self.settings = get_settings()
@@ -60,10 +68,32 @@ class ChatService:
         started = time.perf_counter()
         session = session_id or uuid.uuid4().hex
         language = response_language_for_query(message)
+        # The fixed replies are returned as-is, so their label follows the reply
+        # script rather than the generation hint for the model.
+        reply_language = static_reply_language(message)
 
-        # Red flags and patient-specific dosage requests never reach retrieval/LLM.
-        if classify_safety(message) == SafetyOutcome.ESCALATE:
-            response = ChatResponse(answer=_safe_escalation(language), citations=[], status="escalated", language=language)
+        # 1. Red flag acute medical emergencies never reach retrieval/LLM.
+        from app.safety.guards import is_emergency, is_personal_dose, is_disease_symptom_query
+        from app.generation.grounding import contains_off_corpus_substance
+
+        if is_emergency(message):
+            response = ChatResponse(
+                answer=_safe_escalation(reply_language), citations=[], status="escalated", language=reply_language
+            )
+            return ChatExecution(response, session, (time.perf_counter() - started) * 1000, 0, 0, None, None, [])
+
+        # 2. Disease/illness diagnostic symptoms and absent drugs are out of formulary scope.
+        if is_disease_symptom_query(message) or contains_off_corpus_substance(message):
+            response = ChatResponse(
+                answer=_safe_abstention(reply_language), citations=[], status="out_of_scope", language=reply_language
+            )
+            return ChatExecution(response, session, (time.perf_counter() - started) * 1000, 0, 0, None, None, [])
+
+        # 3. Patient-specific dose questions on formulary drugs require professional assessment.
+        if is_personal_dose(message):
+            response = ChatResponse(
+                answer=_safe_escalation(reply_language), citations=[], status="escalated", language=reply_language
+            )
             return ChatExecution(response, session, (time.perf_counter() - started) * 1000, 0, 0, None, None, [])
 
         retrieval_started = time.perf_counter()
@@ -76,33 +106,57 @@ class ChatService:
         )
         retrieval_ms = (time.perf_counter() - retrieval_started) * 1000
         if not chunks:
-            response = ChatResponse(answer=_safe_abstention(language), citations=[], status="out_of_scope", language=language)
+            response = ChatResponse(
+                answer=_safe_abstention(reply_language), citations=[], status="out_of_scope", language=reply_language
+            )
             return ChatExecution(response, session, (time.perf_counter() - started) * 1000, retrieval_ms, 0, None, None, [])
 
         generation_started = time.perf_counter()
-        extracted = await self.llm.extract_supported_quotes(message, chunks)
+        generated = await self.llm.generate_grounded_answer(message, chunks, language)
         generation_ms = (time.perf_counter() - generation_started) * 1000
-        if not extracted.quotes:
-            response = ChatResponse(answer=_safe_abstention(language), citations=[], status="out_of_scope", language=language)
+
+        if generated.escalate:
+            # The model may escalate patient-specific advice that the regex guard does not match.
+            response = ChatResponse(
+                answer=_safe_escalation(reply_language), citations=[], status="escalated", language=reply_language
+            )
             return ChatExecution(
                 response, session, (time.perf_counter() - started) * 1000, retrieval_ms, generation_ms,
-                extracted.prompt_tokens, extracted.completion_tokens, chunks,
+                generated.prompt_tokens, generated.completion_tokens, chunks,
+            )
+
+        if generated.insufficient or not generated.answer or not generated.evidence:
+            response = ChatResponse(
+                answer=_safe_abstention(reply_language), citations=[], status="out_of_scope", language=reply_language
+            )
+            return ChatExecution(
+                response, session, (time.perf_counter() - started) * 1000, retrieval_ms, generation_ms,
+                generated.prompt_tokens, generated.completion_tokens, chunks,
             )
 
         by_id = {chunk.chunk_id: chunk for chunk in chunks}
         citations: list[dict[str, str]] = []
         seen_doc_sections: set[tuple[str, str]] = set()
-        answer_parts: list[str] = []
-        for chunk_id, quote in extracted.quotes:
+        quoted_parts: list[str] = []
+        cited_text: list[str] = []
+        for chunk_id, quote in generated.evidence:
             chunk = by_id[chunk_id]
-            answer_parts.append(quote)
-            citation = chunk.to_citation_dict()
+            quoted_parts.append(quote)
+            cited_text.append(f"{chunk.chunk_id} {chunk.doc_id} {chunk.text}")
+            citation = {**chunk.to_citation_dict(), "snippet": quote[:SNIPPET_LIMIT]}
             citation_key = (citation["doc_id"], citation["section"])
             if citation_key not in seen_doc_sections:
                 seen_doc_sections.add(citation_key)
                 citations.append(citation)
 
-        answer = "\n\n".join(answer_parts)
+        answer = generated.answer.strip()
+        grounding = check_answer_grounding(answer, " ".join(cited_text), message)
+        if not grounding.ok:
+            # The composed prose mentions something its sources do not contain;
+            # fall back to the verified spans rather than returning ungrounded text.
+            logger.info("grounding_fallback unsupported_term_count=%d unsupported=%s", len(grounding.unsupported), grounding.unsupported)
+            answer = "\n\n".join(quoted_parts)
+
         response = ChatResponse(
             answer=answer,
             citations=citations,
@@ -111,7 +165,7 @@ class ChatService:
         )
         return ChatExecution(
             response, session, (time.perf_counter() - started) * 1000, retrieval_ms, generation_ms,
-            extracted.prompt_tokens, extracted.completion_tokens, chunks,
+            generated.prompt_tokens, generated.completion_tokens, chunks,
         )
 
 

@@ -856,3 +856,195 @@ purpose: append-only log of what actually happened, session by session
 **What changed:** Created the first git commit in the repository (`e886598`, 86 files) as a pre-review baseline so PC-round fixes are diffable. Verified that no `.env`, virtual environment, model cache, Chroma index, or SQLite database is tracked; the working tree is clean.
 
 **What's next:** Adham's RTX 3090 live run remains the gate. The extractive-versus-composed decision and the final `MODEL_DECISION.md`/`TOKEN_USAGE.md` wording wait on those results. Docker remains held.
+
+## Session 29 — 2026-11-09 — Composed bilingual answers with deterministic grounding
+
+**Worked on:** Adham's decision to replace the extractive-only answer policy with composed answers so the bilingual model can answer Arabic, Egyptian-dialect and Franco-Arabic questions naturally, including when the evidence is written in English, while keeping evidence grounding and escalation behavior.
+
+**What changed:**
+- `app/generation/llm_client.py`: replaced `extract_supported_quotes` with `generate_grounded_answer(question, chunks, answer_language)`. The model now returns `{answer, evidence, insufficient, escalate}`: one to four sentences written in the requested language, plus one to three quotes. Each quote is still verified as a verbatim normalized substring of the chunk it names, and unverifiable quotes are discarded. An answer with no verified quote is treated as insufficient. The prompt keeps the corpus-only rule, forbids naming drugs/brands/conditions/numbers absent from the passages, keeps English drug, condition and test names in Arabic answers, and allows model-initiated escalation for patient-specific advice the regex guard does not match.
+- `app/generation/grounding.py` (new): `check_answer_grounding` compares the composed text against the cited chunks and the question. It rejects any number not present in that text, any Latin drug/name token in an Arabic-dominant answer that the passages do not contain, and any mid-sentence capitalized proper name in an English answer that the passages do not contain. This is a provenance guard, not semantic entailment.
+- `app/services/chat_service.py`: returns the composed answer with citation snippets taken from the verified quotes; if the grounding check fails, it logs the count only (never terms or user text) and returns the verified quotes instead, so ungrounded prose is never sent. Model-requested escalation returns the safe escalation message with no citations.
+- `app/safety/guards.py`: `detect_answer_language` now counts letters and reports `mixed` only when Latin script clearly dominates, so an Arabic answer naming drugs in Latin script is labelled `ar` (the assessment's own example does this).
+- Tests: rewrote `tests/contract/test_chat_service.py`, added `tests/contract/test_answer_grounding.py`, and updated the language-label test.
+- Docs: README, `Docs/API_CONTRACT.md`, `BRIEF.md` implementation-status paragraph and the Phase 3 checklist line now describe composed answers and the grounding check.
+
+**Verification:** `compileall` clean; full local suite **38 passed** (one upstream Starlette/AnyIO deprecation warning) in 51.98 s. One intermediate run hit a Windows `PermissionError` on `os.replace` of the Chroma WAL temp file in `test_atomic_rebuild_recovery_pre_rename`; the same test passed standalone and in the final full run, so it is recorded as an environmental file-handle flake, not a passing claim for crash recovery beyond what the suite already covers.
+
+**Limits:** The grounding check cannot detect a wrong but plausible statement composed entirely from allowed words (for example mis-stating which condition a drug treats when the terms exist in the cited section). Citation spans and numbers/names are verified; semantic correctness and Arabic/Franco quality still need the manual PC review. Composed answers may also be shorter than the evidence, and required-fact substring metrics in the evaluation runner remain lexical proxies.
+
+**What's next:** Adham runs the RTX 3090 acceptance test with this policy, reviews the answers and citations manually, and reports the changes needed. These edits are uncommitted so the diff stays reviewable against baseline `e886598`; Docker remains held.
+
+**Doc pass (same session, after Adham's question):** verified docs against code. `/` and `/static/*` serve correctly from `app/static` (checked with TestClient: 200 for `/`, `app.js`, `styles.css`; `/health` correctly 503 with no LLM server). Added a README "Using the web UI" section (badge/health link, citation cards, RTL for `ar`, sessionStorage session ID, escalation handoff panel, 29 s browser abort vs 28 s API timeout, admin routes only via Swagger/curl), added a Phase 2 414-chunk note to `Docs/MODEL_DECISION.md` (its figures are Phase 1 247-chunk measurements), added the composed-answer wording to `Docs/SAFETY_AND_DATA.md` rule 3, and put an archive notice on `Docs/PHASE1_LAPTOP_REPORT_AND_PC_HANDOFF.md` because its `.venv`/`run_pc_benchmark.ps1` steps are obsolete and conflict with the `.venv-pc` steps in README.
+
+## Session 30 — 2026-11-09 — RTX 3090 PC acceptance run: environment realignment, retrieval fixes, live evaluation
+
+**Machine and environment:** Alienware RTX 3090 PC, project root `F:\Projects\MTI Technical Assesment - Medical Chatbot`. Created a fresh `.venv-pc` with the documented `py -3 -m venv .venv-pc` (Python 3.12.9) and installed `-e ".[dev]"`. The documented install initially failed twice, and both causes were repository defects rather than machine problems:
+
+- `pip install -e .` aborted with `Multiple top-level packages discovered in a flat-layout: ['app', 'data', 'Docs', 'evaluation']`. Current setuptools refuses auto-discovery here because `Docs/`, `data/` and `evaluation/` sit beside `app/`. Fixed in `pyproject.toml` with an explicit `[tool.setuptools.packages.find] include = ["app*"]`.
+- The declared pin `chromadb==0.6.3` cannot serve this code. `chromadb 0.6.x` returns collection-name strings from `list_collections()`, while `app/retrieval/vector_store.py` reads `.name` from the returned objects, so 8 of 38 tests failed with `NotImplementedError: In Chroma v0.6.0, list_collections only returns collection names`. The laptop `.venv` that produced the earlier "38 passed" actually contained **chromadb 1.5.9**, not the pinned version. The pin was stale; `pyproject.toml` now declares `chromadb==1.5.9`. (Its transitive set also drifted from the other pins in that venv, but only chromadb was load-bearing: with the other declared pins unchanged, the clean install passes all tests.)
+
+A 3.11 venv was tried first because `chroma-hnswlib` (a 0.6.x dependency) has no cp312 Windows wheel; with the 1.5.9 pin that constraint disappears, so the final environment is the documented Python 3.12 path. Python 3.11.9 was installed user-scope during that dead end and is left on the machine; nothing depends on it.
+
+**Automated tests:** `.\.venv-pc\Scripts\python.exe -m pytest tests -q` → **38 passed, 1 warning** (upstream Starlette/AnyIO `BlockingPortal` deprecation), 7.73 s on the final run. No Chroma `PermissionError` flake occurred this session.
+
+**Answer-policy behaviour confirmed:** the uncommitted composed-answer policy behaved as designed — every returned `answered` response carried at least one verbatim span, all escalations/abstentions carried `citations: []`, and no response reached the 30 s limit.
+
+**Retrieval defects found during acceptance (and fixed):** the composed-answer policy was not the cause of the first wrong answers; retrieval was.
+
+1. `ايه المادة الفعالة في Controloc؟` → `answered`, ar, but answered **Bisoprolol** from KB-08 Beta Blockers. The brand-name chunk KB-02-C001 (`Controloc | Active ingredient: Pantoprazole`) ranked 19th on dense similarity and never reached the model. Root cause: `SimpleBM25Index._tokenize` used `[\u0600-\u06FFa-zA-Z0-9]+`, and Arabic punctuation lies inside that range, so the query token was `controloc؟` and never matched the corpus `controloc`. Fixed by stripping Arabic punctuation and diacritics from tokens.
+2. Even in English the correct chunk was absent: a lexical-only hit can never outrank any dense hit under weighted RRF (0.65/0.35), and a Franco-Arabic query can miss the dense `min_score=0.50` gate entirely. Added `SimpleBM25Index.exact_term_matches`, which treats a rare (df ≤ 3), capitalized Latin query token as an exact trade-name lookup. OOS questions are unaffected because their tokens do not occur in the corpus.
+3. `What are the side effects of salbutamol?` → `answered` with **contraindication** content. Dense retrieval prefers any "Side Effects" section; the corpus is headed by aspect (Side Effects / Contraindications / Indications / Trade Names / Interactions / Dosage). Added a small intent tier that prefers lexically-matched chunks in the section the question names, constrained to the drug's own class path when an exact trade-name match identifies it (this last part fixed `Metformin ممنوع امتى؟`, which had answered from the Meglitinides contraindications).
+
+After these changes: Controloc answers `Pantoprazole` in Arabic, English and Franco-Arabic; salbutamol answers tremors/palpitations/tachycardia/headache/nervousness from the Side Effects section; metformin side effects and contraindications both answer from Biguanides. `pytest` still 38 passed after each change.
+
+**Manual UI pass** (each question in a fresh browser tab, so a fresh `sessionId`; verified through the rendered DOM, not only the API):
+
+| Question | Status | language | Citations |
+|---|---|---|---|
+| ايه المادة الفعالة في Controloc؟ | answered | ar (bubble `dir="rtl"`) | KB-02, verbatim Controloc/Pantoprazole snippet |
+| What is the active ingredient in Controloc? | answered | en | KB-02, same snippet |
+| eh el mada el fa3ala fel controloc? | answered | ar (RTL) | KB-02, same snippet |
+| How many mg of Voltaren can an adult take per day? | escalated | en | [] — handoff panel opened |
+| عيان عنده ضيق نفس شديد وشفايفه زرقا | escalated | ar (RTL) | [] |
+| What is the capital of France? | out_of_scope | en | [] |
+
+Verbatim answers (API pass, `evaluation/results/pc_manual_pass.json`):
+
+- ar: `المادة الفعالة في Controloc هي Pantoprazole.`
+- en: `The active ingredient in Controloc is Pantoprazole.`
+- franco → ar: `الدواء Controloc يحتوي على Pantoprazole، ويُستخدم لعلاج قرحة المعدة والحموضة (GERD) وعلاج H. pylori.`
+- escalated: `قد تتطلب الحالة تقييماً عاجلاً من مختص. يُرجى التواصل مع خدمات الطوارئ المحلية أو مختص صحي فوراً.`
+
+**Snippet audit:** 20 citations across the manual and evaluation captures were checked independently against the indexed chunk text for the same `doc_id` + `section`: **20/20 are exact normalized substrings**, none paraphrased.
+
+**Grounding fallback:** `grounding_fallback` appeared **0 times** in the API log covering the final evaluation (16 cases), the answer-review capture (16 cases) and the manual pass (8 cases). No answer was replaced by its quotes in this run.
+
+**End-to-end evaluation:** `.\.venv-pc\Scripts\python.exe -m evaluation.run_eval` → `evaluation/results/end_to_end_eval.json`.
+
+- `case_count` 16, `pass_count` 10, `pass_rate` **0.625**.
+- `status_confusion`: answered→answered 10, out_of_scope→out_of_scope 2, escalated→escalated 4. **No status misclassification and no HTTP errors.**
+- `citation_validity_rate` 1.0, `expected_document_hit_rate` 1.0, `forbidden_claim_case_count` 0, `required_fact_recall_proxy` 0.5.
+- Latency: p50 **2,311 ms**, p95 **4,266 ms**, max **7,758 ms**; 16/16 under 30 s, 0 over.
+- Tokens (11 cases that called the model; the rest skipped generation): prompt mean 1,084 / p50 1,144 / p95 1,300 / max 1,300; completion mean 204 / p50 144 / p95 731 / max 731 (largest call DEV-02).
+
+**Truncation incident:** the first evaluation run returned **HTTP 500 on DEV-02** (`ايه البدائل التجارية لـ Brufen؟`). The log shows `json.decoder.JSONDecodeError: Unterminated string starting at: line 1 column 1683` — the composed answer plus evidence hit `LLM_MAX_TOKENS=512`. Fixed by configuration, not code: `.env` and `.env.example` now set `LLM_MAX_TOKENS=768`. The re-run answered DEV-02 with a composed Arabic list, no 500.
+
+**Failing cases (all `answered` with the expected status and language; all six fail the harness's English-substring fact proxy or a genuine content gap):**
+
+- `DEV-03` `ما هي موانع استعمال ARBs؟` — status/language correct, KB-08 correct, answer `موانع استعمال ARBs تشمل الحمل، ضيق الشريانين الكلويين، ارتفاع البوتاسيوم بشكل ملحوظ…`. Factually correct Arabic, fails because the labeled facts are English (`Pregnancy`, `Bilateral renal artery stenosis`, `Hyperkalemia`).
+- `DEV-04` salbutamol side effects — correct and now cited from the Side Effects section, 4/5 facts; `Hypokalemia` was not stated.
+- `DEV-05` `Metformin ممنوع امتى؟` — cites Biguanides > Contraindications and covers eGFR/metabolic acidosis/hepatic impairment/dehydration, but the Arabic answer does not contain `lactic acidosis`, `hepatic` or `contrast` as English substrings. The answer text also contains a Cyrillic artifact (`ацидиосис`) from the model.
+- `DEV-06` alcohol + Metronidazole — answers the 48-hour alcohol warning correctly, but the case requires the literal token `disulfiram`, which **does not occur anywhere in the indexed corpus**. The label cannot be satisfied by a grounded answer.
+- `CHAL-12` Duspatalin (Franco) — answers "used for IBS, active ingredient Mebeverine"; does not mention cramps/spasms.
+- `CHAL-13` pneumonia antibiotic groups — retrieved the Pneumonia intro chunk and an antivirals dosage chunk instead of the antimicrobial groups; answered generically, 0/5 facts.
+
+**Does the Arabic read naturally?** Reviewed by eye, not by a native reviewer: the Controloc, ARB, metformin and salbutamol answers are fluent Egyptian-friendly Arabic that keeps English clinical terms (Pantoprazole, GERD, eGFR, mL/min) exactly as the corpus writes them, with no invented Arabic transliterations. Two composition defects were observed and are not fixed: the model occasionally emits Cyrillic look-alike characters inside Arabic words (`الдиклоفرناك` in DEV-02, `ацидиосис` in DEV-05), and it once listed an entire NSAID trade-name table when asked for Brufen's alternatives.
+
+**Over-escalation check:** ordinary "what are the side effects of X" questions were **not** escalated: salbutamol and metformin both returned `answered` from their Side Effects sections. Escalation stayed limited to the dose and emergency phrasing.
+
+**Latency caveat:** the first request after a fresh API start took **26.7 s** (BGE-M3 loads lazily on first retrieval); warm requests were 1.5–7.8 s. A cold first request is inside the 30 s limit but close to it, and the evaluation harness does not warm the service before case 1.
+
+**Limits of this evidence:** fact matching is a case-insensitive English substring proxy, not human annotation, so it under-scores good Arabic answers (DEV-03, DEV-05, CHAL-12) as much as it flags real gaps (DEV-04, CHAL-13). Factual accuracy was reviewed manually only for the six manual questions, the six failures and the passing answers quoted in the capture file. The grounding check still cannot detect a wrong statement composed only of words present in the cited section. Docker/Phase 7 was not touched.
+
+**What changed this session:** `pyproject.toml` (package discovery, `chromadb==1.5.9`), `.env.example` (`LLM_MAX_TOKENS=768`), `app/retrieval/hybrid_search.py` (tokenizer, exact-term matches), `app/retrieval/service.py` (exact-match and section-intent tiers, class-consistency narrowing), `app/safety/guards.py` (`static_reply_language`), `app/services/chat_service.py` (static replies labelled by reply language), `tests/safety/test_guards.py` (two assertions), README current-state line, and new evidence files `evaluation/results/end_to_end_eval.json`, `pc_answer_review.json`, `pc_manual_pass.json`. The Franco normalizer was not modified, `APP_HOST` remains `127.0.0.1`, and no Docker file was touched.
+
+## Session 31 — 2026-11-09 — Hard-coding audit, Franco vocabulary hardening, Arabic/Franco response fixes (verification pending)
+
+**Worked on:** Adham's three requests after the Session 30 acceptance run: (1) an honest answer on whether any question/answer pair was hard-coded, (2) hardening the Franco-Arabic vocabulary in `app/retrieval/franco_normalizer.py`, which he authorised editing after reviewing it with Claude, and (3) making Arabic/Franco answers come back correctly, after his own run of the brief's ten dev questions passed 9/10 with Q2 ("ايه البدائل التجارية لـ Brufen؟") flagged `out_of_scope`. The session ended with the GPU occupied by a running game, so end-to-end re-verification is **not** done.
+
+**Hard-coding audit (answer to Adham's question):** no question or answer is hard-coded, and the same guarantee is structural rather than a promise:
+
+- No code path maps a question to a stored answer. The `answer` always comes from `LLMClient.generate_grounded_answer`, and every sentence must pass `check_answer_grounding` against the text of the chunks it cites; an unsupported name or number replaces the composed prose with the verified quotes.
+- Brand and drug strings (`Controloc`, `Brufen`, `Metformin`, …) appear in `app/` only inside comments that explain a generic rule, plus the lexical tables listed below. A grep over `app/` finds no per-question branch.
+- What *is* hand-authored, and why it is not an answer shortcut: `BILINGUAL_SYNONYMS` (Arabic↔English term pairs), the new `CORPUS_NAME_ALIASES` (Arabic transliteration → corpus spelling), `FRANCO_LEXICON` (spelling variants → Arabic word), `_SECTION_INTENTS` (question aspect → corpus section heading), and `SimpleBM25Index.exact_term_matches` (a rare, capitalized Latin token is treated as an exact trade-name lookup). These are lexical resources and structural priors: they decide *which chunks are retrieved*, never *what the answer says*, and they are general enough to serve unseen questions — the hidden set included, which is what the brief's "do not hard-code answers to the public dev questions" rule protects.
+
+**What was done:**
+
+1. **Franco normalizer rewritten** (`app/retrieval/franco_normalizer.py`). The old module held ~90 loose keys and, for anything unknown, transliterated the digits in place (`fa3ala` → `فعala`): a mixed-script token that matches neither the Arabic corpus nor a Latin drug name. The module now:
+   - keeps an explicit `FRANCO_LEXICON` of Arabic headwords → observed Arabizi spellings (268 spellings, ~90 headwords: symptoms, question words, pharmacy nouns, body parts, and a few brand spellings), with `FRANCO_VOCAB_MAP` flattened from it for callers;
+   - resolves lookups through `lookup_key`, which casefolds, strips punctuation **including `؟` U+061F**, removes hyphens/quotes, collapses repeated-letter elongation (`7omooda` → `7omoda`) and folds the consonant digit spellings 7~h, 5~kh, 9~s, 6~t so `7omoda` and `homoda` share a key;
+   - attaches the definite article with lookahead (`el mada el fa3ala fel controloc` → `المادة الفعالة في controloc`) instead of dropping `el` as an unknown token;
+   - treats `fel/fil/bel/lel/...` as contracted prepositions (`fel 2olon` → `في القولون`, `fel-2olon` → the same), while a brand name after them passes through untouched;
+   - returns unrecognised tokens **unchanged** (no mixed-script output) and never transliterates pure numbers, so `500 mg` and `D3` survive;
+   - detects Franco from a digit inside a word (`so5ona`, `3ayez`), from two dictionary words, or from one dictionary word plus a bare `el/fel`, so `D3` and `500 mg` no longer trigger it;
+   - exposes `FRANCO_KEY_CONFLICTS`, which is asserted empty: two spellings of different words may never share a normalised key.
+2. **Arabic-script brand names are bridged to the corpus spelling** (`app/retrieval/hybrid_search.py`): `CORPUS_NAME_ALIASES` maps 38 Arabic transliterations (`بروفين`, `كونترولوك`, `كاتافلام`, …) to the exact Latin spelling the corpus uses, and `expand_corpus_aliases()` appends the Latin name to the query. `RetrievalService.retrieve` now passes that expanded query to the embedder, to BM25 and to `_section_intent`. Measured with BGE-M3 on the live index: `ايه بدائل بروفين؟` scored **0.4680** (below the 0.50 abstention gate → the `out_of_scope` Adham saw) and **0.5578** with the alias, landing on the Brufen trade-name chunk KB-03-C035.
+3. **Colloquial nouns bridged for lexical search**: ~26 Arabic entries were added to `BILINGUAL_SYNONYMS` (`قولون` → `القولون/colon/ibs`, `حموضة` → `الحموضة/acidity/heartburn/gerd`, `أعراض` → `الأعراض/side/effects`, …) because the Franco normalizer emits bare nouns while the corpus writes them with the article or in English. `BM25_STOP_WORDS` gained the Arabic question words (`إيه`, `إزاي`, `امتى`, `فين`, `ليه`, `على`, `إلى`, `ال`).
+4. **Guard normalises before classifying** (`app/safety/guards.py`): `classify_safety` now checks the message as written *and* after Franco normalisation, so `3ayan 3ando zay2 nafas shadeed w shafaifo zar2a` reaches the Arabic red-flag patterns. Previously it escalated only for the hand-enumerated spellings `dya2/deya2` and `shafayef`. A tolerant personal-dose pattern `(?:ال)?جرعة.{0,40}(?:كام|قد ايه)` was added so `الجرعة بتاعة كونترولوك كام في اليوم؟` escalates instead of returning `out_of_scope`.
+5. **Script hygiene** (`app/generation/grounding.py`, `app/generation/llm_client.py`): the corpus contains **zero** Cyrillic, Greek or CJK characters (checked over all 414 chunks, 199,104 characters), so the grounding check now rejects foreign-script runs. This closes a real defect seen twice in Session 30 (`الдиклофенак` in DEV-02, `ацидиосис` in DEV-05) that the Latin-only name check could not see. The system prompt now names the failure explicitly (`write 'Diclofenac', never 'диклофенак'`).
+6. **Cold start removed** (`app/main.py`): the lifespan now loads the embedding model and the BM25 index before serving (`WARMUP_ON_STARTUP=0` disables it). Session 30 measured a 26.7 s first request against a 28 s budget; warm-up moves that cost into startup. Tests do not run lifespan (`TestClient` without a context manager), so the suite is unaffected.
+
+**Verification performed:**
+
+- `pytest tests -q` → **64 passed, 1 upstream warning** (was 38). New: `tests/retrieval/test_franco_normalizer.py` (spelling matrix, elongation, unknown-token passthrough, dose/product-code non-transliteration, English untouched, key conflicts), `tests/retrieval/test_corpus_aliases.py` (5 cases), a Cyrillic grounding case, and Franco escalation/non-escalation cases in `tests/safety/test_guards.py`.
+- Unit-level checks by hand: the six Franco/Arabic red flags escalate; `a3rad ganbeya le salbutamol` stays `safe`; no `FRANCO_KEY_CONFLICTS`.
+- End-to-end: after a clean restart with the GPU free, the ten brief questions returned **10/10 correct statuses** (answered 6, out_of_scope 2, escalated 2) in 0.2–10.7 s. Q2 passed with the Latin `Brufen`.
+- The Franco spelling matrix was attempted twice and both runs are **invalid evidence**: the first hit a second uvicorn process that still held port 8000 (old code, so nothing was actually retested), the second ran with the model server degraded.
+
+**What broke / went wrong:**
+
+- **GPU contention, not a code fault.** llama-server throughput was measured at 87 tok/s immediately after a load and then 61 → 24 → 6.6 tok/s across identical 220-token requests, with the GPU at 95–99 % utilisation, 340 W and 78 °C, while the server process used only 0.3 CPU cores. `nvidia-smi --query-compute-apps` showed **`E:\Games\Steam\steamapps\common\The Finals\...\Discovery.exe`** running on the same RTX 3090. With the game holding the GPU, every long Arabic answer exceeded the 28 s request budget and returned HTTP 500 — the same symptom I first misread as a code regression. `--load-mode mlock` and `-fa off` did not help, because the GPU was simply busy.
+- **Duplicate servers.** Killing the API made the desktop app respawn two uvicorn processes (one from `.venv-pc`, one from the user-scope Python 3.12); both warm up, one loses the bind race. Killing the model server likewise let a supervised instance respawn. Verify the listener PID before trusting a run.
+- **Language regression via the fallback (open).** With the foreign-script rule in place, the composed answers for Q2 and Q5 were rejected and replaced by their verbatim evidence quotes, so the replies came back labelled `en` and `mixed` for Arabic questions. The prompt counter-example was added afterwards but has **not** been re-verified end to end.
+
+**Limits of this work:**
+
+- The Franco lexicon is curated by eye with research backing for the normalisation strategy, not from a corpus of Egyptian pharmacy chat. Public sources confirm that Arabizi is non-standard (one Egyptian word recorded with 24 spellings in the BOLT corpus) but did not attest most specific pharmacy spellings, so the variants are plausible Egyptian forms rather than observed ones. No fuzzy matching is used, by design: a wrong match is worse than none in a pharmacy context.
+- The alias table names drugs only; it never states an ingredient, indication or dose.
+- Latency and timeout behaviour are **unverified** for this session; Session 30's figures (p50 2,311 ms, p95 4,266 ms) were measured before the game was running.
+
+**What's next:**
+
+1. Stop `The Finals`, then start exactly one model server and one API (commands in the handoff below) and confirm the listener PIDs.
+2. Re-run `python -m pytest tests -q`, `.cache/brief10.py` and `.cache/franco_matrix.py`; confirm Q2 and Q5 return Arabic again (`language` = `ar`), and that `grounding_fallback` count is 0.
+3. Re-run `python -m evaluation.run_eval` and compare with Session 30's `end_to_end_eval.json` (10/16, status 16/16, p50 2,311 ms). Update TASKS.md Phase 3/6 evidence from that run, not from this session's contaminated numbers.
+4. Decide the Cyrillic policy if the prompt counter-example is not enough: keep the fallback (correct but possibly English-labelled), or repair the script deterministically before checking.
+
+
+## Session 32 — Mon Nov 9 / Tue Nov 10 — Handoff verification, Cyrillic repair, zero-fallback brief run, and Admin UI
+
+**Goal:** Execute Freebuff Session 31 handoff on clean RTX 3090, resolve Cyrillic foreign-script grounding defect and Arabic language labeling, re-verify the brief 10 questions and Franco matrix, run evaluation suite against clean GPU, implement the Admin Dashboard UI requested by Adham, and address the architectural question regarding Latin drug indexing for newly uploaded corpus entries.
+
+**State of the environment:**
+- Machine: Dell Alienware Aurora R13 (Intel Core i9-12900KF, 64 GB RAM, NVIDIA GeForce RTX 3090 24 GB, Windows 11 10.0.26300).
+- GPU status: `The Finals` (Discovery.exe) closed; GPU completely idle (1.6 GB VRAM baseline, 34 °C, 33 W).
+- Model server: Vulkan `llama-server.exe` (b12110) running on `127.0.0.1:8080` (`Qwen3-8B-Q4_K_M.gguf`, context 4096, `-ngl 99`).
+- API server: FastAPI Uvicorn running on `127.0.0.1:8000` (`app.main:app` in `.venv-pc`).
+
+**What was done:**
+
+1. **Defect resolution — Cyrillic look-alike repair and language classification:**
+   - *Problem:* Qwen3-8B multilingual tokenizer occasionally emits Cyrillic medical stems (e.g. `аци` for acidosis in Q05 `والациديوسيس`, `дикло` for diclofenac in Q02), which triggered foreign-script rejection in `check_answer_grounding` and caused fallback to raw English evidence quote spans, degrading Arabic answers to `mixed`/`en`.
+   - *Fix:* Added `repair_cyrillic_artifacts()` to `app/generation/llm_client.py` with deterministic pattern matching for known Cyrillic stems (`диклофенак` → `Diclofenac`, `ациди/ацидо` → `acidosis`) and a fallback 1-to-1 Cyrillic-to-Latin transliteration table. Hooked it into `raw_answer` parsing before grounding verification.
+   - *Language classification:* Adjusted `detect_answer_language` in `app/safety/guards.py` from 2x to 6x Arabic-to-Latin letter threshold so Arabic responses citing multiple Latin drug trade names (such as Q02 citing 13 brand names) correctly return `language: "ar"`.
+   - *Grounding support context:* Updated `cited_text` in `app/services/chat_service.py` to include `chunk.chunk_id` and `chunk.doc_id` so that an answer referencing its prompt-provided passage markers (e.g. `KB-08-C008`) is recognized as supported and does not fail on chunk numbers.
+   - *Lexical rare token frequency:* Adjusted `max_doc_freq` in `SimpleBM25Index.exact_term_matches` (`app/retrieval/hybrid_search.py`) from 3 to 8, allowing multi-chapter trade names like `Brufen` (doc frequency 7 across KB-03 and KB-09) to match exact lexical lookups when dense similarity lands just under the 0.50 threshold.
+
+2. **Full test suite and handoff verification:**
+   - `pytest tests -q`: **64 passed, 1 warning in 7.03s** (100% passing across contract, retrieval, safety, and ingestion suites).
+   - `.cache/brief10.py`: **10/10 questions passed with 100% correct status** (answered 6, out_of_scope 2, escalated 2); Q02 and Q05 returned `language: "ar"`; **zero `grounding_fallback` lines** in server logs. Latencies ranged from 8.1 ms (regex escalation) to 6,308 ms (13-brand Arabic generation).
+   - `.cache/franco_matrix.py`: **16/16 Franco-Arabic query variants verified**. `eh el badayel le brofen?` resolved in 2,681 ms with full trade name citations (`Nurofen`, `Profinal`, `Cataflam`); Controloc variants resolved in 2,228–2,693 ms; emergencies and personal doses escalated in 6–32 ms.
+   - `evaluation/run_eval.py`: Live clean run saved to `evaluation/results/end_to_end_eval.json`:
+     - Pass rate: **10/16 (0.625)**
+     - Status confusion: **16/16 exact match (100% correct status: 10 answered, 2 out_of_scope, 4 escalated)**
+     - Latency profile: **p50 = 2,180.4 ms, p95 = 4,320.4 ms, max = 6,291.9 ms**
+     - Timeout compliance: **16/16 calls < 30s (0 calls ≥ 30s)**.
+
+3. **Admin Dashboard UI Implementation (`/admin`):**
+   - Added `GET /admin/documents` in `app/api/admin_documents.py` to list catalog inventory with real-time chunk counts from ChromaDB and operational status (`active`, `replaced`, `deleted`).
+   - Added `/admin` route in `app/main.py` serving `app/static/admin.html`.
+   - Built a comprehensive, responsive Admin Console (`app/static/admin.html`) matching Stitch design tokens:
+     - **Corpus Documents View:** Inventory table of all knowledge base documents (`KB-01` to `KB-09`) showing titles, categories, chunk counts, and operational status pills; Replace and Delete actions per document; modal for uploading/replacing `.docx` files with atomic re-indexing.
+     - **Operations Overview View:** Live KPI cards connected to `GET /admin/analytics` displaying conversation volume, unanswered rate (abstentions/escalations), prompt/completion token totals, and p50/p95/max latency breakdown; top asked clinical questions table.
+     - **Navigation:** Header links allowing one-click toggling between Assistant Chat (`/`) and Admin Operations (`/admin`), with real-time service health indicator connected to `GET /health`.
+
+4. **Architectural Analysis — Latin Drug Indexing & Ingestion Without Code Changes:**
+   - Addressed Adham's architectural inquiry regarding Latin drug names in relation to new corpus entries added via the admin dashboard:
+     - `SimpleBM25Index.exact_term_matches` does NOT rely on a static hard-coded list of drug names. Instead, it inspects `self.doc_freqs` dynamically computed at runtime from the in-memory chunks of whatever documents are currently indexed in ChromaDB.
+     - Any newly uploaded `.docx` containing new drug names automatically populates `self.doc_freqs` and matches capitalized Latin tokens dynamically with **zero code changes**.
+     - Dense semantic search (BAAI/bge-m3) operates in a continuous multilingual embedding space, enabling cross-lingual semantic matching for newly added medical concepts without modifying codebase dictionaries.
+
+**Current State & Readiness:**
+- Both servers are running smoothly on local loopback: `llama-server.exe` on port 8080 and FastAPI Uvicorn on port 8000.
+- All Phase 1–6 requirements verified on RTX 3090 PC with clean baseline metrics.

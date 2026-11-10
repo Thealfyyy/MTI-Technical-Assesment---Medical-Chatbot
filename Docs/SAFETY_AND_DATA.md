@@ -5,5 +5,6 @@
 3. **Clinical Safety & Escalation (`escalated`)**:
    - The chatbot must **never** provide a clinical diagnosis, patient-specific dosage recommendation, or treatment advice not explicitly written in the documents.
    - Questions asking for specific adult/pediatric dosing not in the documents (e.g., *"How many mg of Voltaren can an adult take per day?"*) or presenting urgent/emergency clinical red flags (e.g., severe dyspnea and cyanosis: *"عيان عنده ضيق نفس شديد وشفايفه زرقا، أديله Ventolin؟"*) must return `status: "escalated"` with `citations: []` and safe, non-advisory next-step guidance.
+   - With the composed-answer policy, a recommendation written in the corpus may be restated in ordinary prose, but only alongside a verified verbatim quote from the passage it summarizes. Composed prose may not add advice, a dose, a drug or a condition beyond the retrieved passages; the deterministic grounding check and the citation requirement enforce that boundary.
 4. **Zero Real Patient Data**: All development, evaluation, analytics, and escalation handoff records must use the public assessment questions or synthetic test fixtures only.
 5. **No Hardcoded Dev Answers**: The 10 public dev questions are used strictly as evaluation regression cases; application code must never pattern-match or branch on literal public question strings.
