@@ -1048,3 +1048,81 @@ Verbatim answers (API pass, `evaluation/results/pc_manual_pass.json`):
 **Current State & Readiness:**
 - Both servers are running smoothly on local loopback: `llama-server.exe` on port 8080 and FastAPI Uvicorn on port 8000.
 - All Phase 1–6 requirements verified on RTX 3090 PC with clean baseline metrics.
+
+
+## Session 33 — Tue Nov 10 — Admin Security Gate, Escalation Workflow, 200-Question 4-Model Benchmark, Docker Pipeline, and Submission Finalization
+
+**Goal:** Complete all remaining assessment requirements: secure the admin endpoints with token authentication, implement escalation handoff tracking and deletion, enable dynamic arbitrary document uploads, execute a live corpus deletion/re-indexing test, run a 200-question clinical benchmark across all 4 candidate LLMs (800 evaluations total), build automated Docker containerization with an idempotent model downloader, clean up obsolete artifacts, and verify complete submission readiness.
+
+**What was done:**
+
+1. **Admin Security Gate & Header Cleanup:**
+   - Secured all `/admin/*` and mutation endpoints (`app/api/admin_documents.py`, `app/api/analytics.py`) with token verification (`X-Admin-Key` header or `Authorization: Bearer`). Configured fallback secret (`admin123` / `mti-admin-secret-2026`).
+   - Removed the Admin portal link from the public patient/clinician chat header (`app/static/index.html`) so casual users cannot access administrative controls.
+   - Built an in-browser password authentication modal on `/admin` (`app/static/admin.html`) that validates credentials against the API, stores the session key securely in `sessionStorage`, and passes the token with all administrative requests.
+
+2. **Escalation Handoff Lifecycle Management:**
+   - Implemented a complete review and resolution workflow for escalation records in `app/api/analytics.py` and `app/static/admin.html`.
+   - Added `status: "pending" | "handled"` state tracking and timestamped handling notes (`handled_by`, `handled_at`).
+   - Added `DELETE /admin/handoffs/{id}` endpoint to permanently remove reviewed and resolved escalation inquiries.
+   - Integrated an Escalation Queue tab in the Admin UI with status pill filters, resolution modals, and deletion controls.
+
+3. **Dynamic Document Uploading Beyond the Static Catalog:**
+   - Extended `app/services/ingestion_service.py` and `app/api/admin_documents.py` to support uploading brand new arbitrary `.docx` documents (e.g. `KB-10`, `KB-11`) in addition to replacing existing documents.
+   - Newly uploaded documents are parsed, chunked, and embedded into ChromaDB with dynamic document frequencies computed for BM25, instantly making new medical entities searchable with zero code modifications.
+
+4. **Live Corpus Mutation & Grounding Integrity Verification (`KB-06`):**
+   - Conducted a live test by deleting document `KB-06` (Antihistamines / Allergic Rhinitis) through the Admin UI.
+   - Tested inquiry: *"ما هي دواعي استعمال تلفاست؟"* (What are the indications for Telfast?). The system immediately returned `out_of_scope` (abstention) because the ground truth was removed from the vector database.
+   - Re-uploaded `KB-06.docx` via the Admin UI: all 50 chunks were atomically re-indexed into ChromaDB.
+   - Re-ran the identical query: the system immediately generated a grounded clinical answer with exact chunk citations (`KB-06-C012`, `KB-06-C013`), verifying dynamic corpus synchronization.
+
+5. **200-Question Comprehensive Clinical Benchmark Dataset (`evaluation/cases_200.jsonl`):**
+   - Synthesized a balanced 200-question evaluation dataset:
+     - 100 in-scope clinical questions spanning all 9 approved documents (English, Modern Standard Arabic, Egyptian Colloquial, and Franco-Arabic).
+     - 50 out-of-scope questions covering non-formulary medications, unapproved indications, and general knowledge.
+     - 50 emergency/escalation questions covering red-flag acute symptoms, toxic overdoses, pediatric emergencies, and personal dosage calculation requests.
+
+6. **4-Model Full Comparative Benchmark (800 Total Queries):**
+   - Executed the full 200-question benchmark sequentially across all 4 candidate LLMs on the Alienware Aurora R13 (RTX 3090 24GB, Vulkan GPU backend, 16 CPU threads, batch size 24):
+     - **`Qwen3-8B-Q4_K_M` (Selected Production Standard):**
+       - Overall Status Accuracy: **96.0% (192/200)**
+       - In-Scope Accuracy: **94.0% (94/100)**
+       - Out-of-Scope Abstention: **96.0% (48/50)**
+       - Emergency Escalation: **100.0% (50/50)** — zero missed safety escalations.
+       - Mean Latency: **1,599 ms** | Max Latency: **8,412 ms** (100% SLA compliant < 30s).
+     - **`medgemma-4b-it-Q4_K_M`:**
+       - Overall Status Accuracy: **93.5% (187/200)**
+       - In-Scope Accuracy: **98.0% (98/100)**
+       - Out-of-Scope Abstention: **84.0% (42/50)** — suffered 8 negative-boundary failures due to pre-trained parametric medical knowledge leakage outside the approved corpus.
+       - Emergency Escalation: **94.0% (47/50)** — missed 3 critical acute emergency escalations.
+       - Mean Latency: **1,376 ms**.
+     - **`Qwen3-4B-Instruct-2507` (Selected CPU / Low-Resource Fallback):**
+       - Overall Status Accuracy: **90.0% (180/200)**
+       - In-Scope Accuracy: **84.0% (84/100)**
+       - Out-of-Scope Abstention: **98.0% (49/50)**
+       - Emergency Escalation: **94.0% (47/50)**
+       - Mean Latency: **950 ms** (fastest throughput; ideal for CPU environments).
+     - **`gemma-4-E4B-it-Q4_0`:**
+       - Overall Status Accuracy: **54.0% (108/200)**
+       - In-Scope Accuracy: **11.0% (11/100)**
+       - Mean Latency: **3,945 ms**
+       - Fails JSON schema adherence and structured generation under Vulkan inference.
+   - Documented complete benchmark results and comparative architectural analysis in `Docs/MODEL_DECISION.md` and `Docs/TOKEN_USAGE.md`.
+
+7. **Multi-Service Docker Containerization:**
+   - Finalized production `docker-compose.yml` defining three tightly coupled services:
+     - `model-downloader`: Lightweight `curlimages/curl` utility that automatically checks if `Qwen3-8B-Q4_K_M.gguf` exists in the persistent model volume; if missing on a clean machine, downloads it directly from Hugging Face with resume and verification logic.
+     - `model-server`: `ghcr.io/ggerganov/llama.cpp:server` exposing port 8080 with healthcheck probes.
+     - `api`: Multi-stage Python 3.12 container running FastAPI/Uvicorn on port 8000, mounting persistent Chroma and SQLite volumes.
+   - Removed obsolete Phase 1 `compose.yaml` to ensure clean parsing by `docker compose config`.
+
+8. **Repository Promotion & Codebase Cleaning:**
+   - Promoted all core documentation to the repository root for immediate visibility: `README.md`, `MODEL_DECISION.md`, `TOKEN_USAGE.md`.
+   - Verified that `stitch_mti_pharmacy_knowledge_assistant/` was an unreferenced static design export and safely deleted all 15 files from git tracking.
+   - Updated `project-continuity-skill/TASKS.md` with verified Phase 6 and 7 checkmarks and empirical evidence.
+   - Full test suite passing: `pytest tests -q` -> 69 passed. 16/16 reference evaluation cases passing.
+
+**Current State & Readiness:**
+- Complete project is packaged, documented, verified, and ready for submission.
+- All local commits ready to be pushed to GitHub origin.
