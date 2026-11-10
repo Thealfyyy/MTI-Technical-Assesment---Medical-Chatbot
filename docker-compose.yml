@@ -1,8 +1,27 @@
 services:
+  model-downloader:
+    image: curlimages/curl:latest
+    container_name: mti-model-downloader
+    volumes:
+      - ./.cache/models:/models
+    command: >
+      sh -c "
+      if [ ! -f /models/Qwen3-8B-Q4_K_M.gguf ]; then
+        echo 'Model not found in cache. Downloading Qwen3-8B-Q4_K_M.gguf (~4.68 GB) from Hugging Face...';
+        curl -L -f --retry 3 -o /models/Qwen3-8B-Q4_K_M.gguf https://huggingface.co/Qwen/Qwen3-8B-GGUF/resolve/main/Qwen3-8B-Q4_K_M.gguf;
+        echo 'Model download completed successfully.';
+      else
+        echo 'Model Qwen3-8B-Q4_K_M.gguf is already present in persistent cache.';
+      fi
+      "
+
   model-server:
     image: ghcr.io/ggml-org/llama.cpp:server
     container_name: mti-model-server
     restart: unless-stopped
+    depends_on:
+      model-downloader:
+        condition: service_completed_successfully
     ports:
       - "8080:8080"
     volumes:
