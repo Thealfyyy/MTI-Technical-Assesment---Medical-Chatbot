@@ -15,38 +15,38 @@ An enterprise-grade, retrieval-augmented clinical drug information assistant for
 
 ```mermaid
 flowchart TD
-    User([User Inquiries\nEnglish / Arabic / Franco-Arabic]) --> ChatAPI[FastAPI POST /chat]
+    User(["User Inquiries<br/>English / Arabic / Franco-Arabic"]) --> ChatAPI["FastAPI POST /chat"]
 
-    subgraph SafetyGate [Tier 1: Deterministic Safety Guards]
-        ChatAPI --> EmerCheck{Acute Emergency\nor Red-Flag?}
-        EmerCheck -- Yes --> EscalateFast[Status: escalated\nLatency < 1 ms | 0 LLM Tokens\nPrompt Emergency Directive]
-        EmerCheck -- No --> DoseCheck{Personalized Dosing\nCalculation?}
-        DoseCheck -- Yes --> EscalateFast
-        DoseCheck -- No --> ScopeCheck{Diagnostic Symptoms\nor Off-Corpus Drug?}
-        ScopeCheck -- Yes --> AbstainFast[Status: out_of_scope\nLatency < 1 ms | 0 LLM Tokens\nPrompt Safe Abstention]
+    subgraph SafetyGate ["Tier 1: Deterministic Safety Guards"]
+        ChatAPI --> EmerCheck{"Acute Emergency<br/>or Red-Flag?"}
+        EmerCheck -->|Yes| EscalateFast["Status: escalated<br/>Latency &lt; 1 ms • 0 LLM Tokens<br/>Prompt Emergency Directive"]
+        EmerCheck -->|No| DoseCheck{"Personalized Dosing<br/>Calculation?"}
+        DoseCheck -->|Yes| EscalateFast
+        DoseCheck -->|No| ScopeCheck{"Diagnostic Symptoms<br/>or Off-Corpus Drug?"}
+        ScopeCheck -->|Yes| AbstainFast["Status: out_of_scope<br/>Latency &lt; 1 ms • 0 LLM Tokens<br/>Prompt Safe Abstention"]
     end
 
-    subgraph HybridEngine [Tier 2: Multilingual Hybrid Retrieval]
-        ScopeCheck -- Pass --> Normalizer[Franco-Arabic Normalizer\n& Corpus Synonym Expander]
-        Normalizer --> DenseBranch[Dense Semantic Search\nBAAI/bge-m3 1024-dim]
-        Normalizer --> LexicalBranch[Lexical Search\nBM25 Term Matcher]
-        DenseBranch --> RRF[Reciprocal Rank Fusion RRF\n65% Dense + 35% Lexical]
+    subgraph HybridEngine ["Tier 2: Multilingual Hybrid Retrieval"]
+        ScopeCheck -->|Pass| Normalizer["Franco-Arabic Normalizer<br/>&amp; Corpus Synonym Expander"]
+        Normalizer --> DenseBranch["Dense Semantic Search<br/>BAAI/bge-m3 1024-dim"]
+        Normalizer --> LexicalBranch["Lexical Search<br/>BM25 Term Matcher"]
+        DenseBranch --> RRF["Reciprocal Rank Fusion RRF<br/>65% Dense + 35% Lexical"]
         LexicalBranch --> RRF
-        RRF --> ReRank[Section Heading Prioritization\nTop-3 Chunks Selected]
+        RRF --> ReRank["Section Heading Prioritization<br/>Top-3 Chunks Selected"]
     end
 
-    subgraph NeuralGrounding [Tier 3: Grounded Clinical Generation]
-        ReRank --> LLMEngine[Qwen3-8B-Q4_K_M GGUF\nllama.cpp Vulkan Server]
-        LLMEngine --> SchemaOut[Grammar-Constrained JSON\nAnswer + Verbatim Evidence Quotes]
-        SchemaOut --> SubstringVal{Verbatim Substring\nValidation Against Chunk}
-        SubstringVal -- Verified --> EntailCheck{Entity & Dosage\nConsistency Check}
-        EntailCheck -- Pass --> FinalAnswer[Status: answered\nWith Verified Citations]
-        EntailCheck -- Fail --> FallbackQuotes[Status: answered\nFallback to Verified Quotes]
-        SubstringVal -- Fail --> AbstainFall[Status: out_of_scope\nNegative Boundary Enforced]
+    subgraph NeuralGrounding ["Tier 3: Grounded Clinical Generation"]
+        ReRank --> LLMEngine["Qwen3-8B-Q4_K_M GGUF<br/>llama.cpp Vulkan Server"]
+        LLMEngine --> SchemaOut["Grammar-Constrained JSON<br/>Answer + Verbatim Evidence Quotes"]
+        SchemaOut --> SubstringVal{"Verbatim Substring<br/>Validation Against Chunk"}
+        SubstringVal -->|Verified| EntailCheck{"Entity &amp; Dosage<br/>Consistency Check"}
+        EntailCheck -->|Pass| FinalAnswer["Status: answered<br/>With Verified Citations"]
+        EntailCheck -->|Fail| FallbackQuotes["Status: answered<br/>Fallback to Verified Quotes"]
+        SubstringVal -->|Fail| AbstainFall["Status: out_of_scope<br/>Negative Boundary Enforced"]
     end
 
-    subgraph Telemetry [Persistence & Analytics]
-        FinalAnswer --> SQLiteStore[(SQLite app.db\nSession & Token Telemetry)]
+    subgraph Telemetry ["Persistence &amp; Analytics"]
+        FinalAnswer --> SQLiteStore[("SQLite app.db<br/>Session &amp; Token Telemetry")]
         EscalateFast --> SQLiteStore
         AbstainFast --> SQLiteStore
     end
