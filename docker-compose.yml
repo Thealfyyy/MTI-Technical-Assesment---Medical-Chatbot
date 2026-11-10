@@ -1,0 +1,53 @@
+services:
+  model-server:
+    image: ghcr.io/ggml-org/llama.cpp:server
+    container_name: mti-model-server
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./.cache/models:/models:ro
+    command: >
+      -m /models/Qwen3-8B-Q4_K_M.gguf
+      --host 0.0.0.0
+      --port 8080
+      -c 4096
+      -t 8
+      -tb 16
+      --temp 0.0
+      --reasoning-budget 0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+
+  api-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mti-api-server
+    restart: unless-stopped
+    depends_on:
+      model-server:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    environment:
+      - LLM_SERVER_URL=http://model-server:8080
+      - LLM_MODEL_NAME=Qwen3-8B-Q4_K_M
+      - APP_HOST=0.0.0.0
+      - APP_PORT=8000
+      - WARMUP_ON_STARTUP=1
+      - ADMIN_AUTH_ENABLED=true
+      - ADMIN_SECRET_TOKEN=admin123
+    volumes:
+      - ./data:/workspace/data
+      - ./.cache:/workspace/.cache
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s

@@ -95,14 +95,17 @@ for cat, count in total_by_category.items():
     print(f"  - {cat:<14}: {corr}/{count} ({pct:.1f}%)")
 print("="*70)
 
-# Save results
-out_res_path = Path("evaluation/results/eval_200_results.json")
+# Output filename from command-line argument if provided
+model_tag = sys.argv[1] if len(sys.argv) > 1 else "eval_200_results"
+out_res_path = Path(f"evaluation/results/{model_tag}.json")
 out_res_path.parent.mkdir(parents=True, exist_ok=True)
 summary_data = {
+    "model_tag": model_tag,
     "total_questions": len(cases),
     "correct_status_count": correct_status_count,
     "accuracy": correct_status_count / len(cases),
     "total_elapsed_seconds": total_elapsed,
+    "average_latency_ms": round(total_elapsed * 1000 / len(cases), 1),
     "by_category": {
         cat: {
             "total": total_by_category[cat],

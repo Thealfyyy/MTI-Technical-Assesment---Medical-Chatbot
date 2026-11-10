@@ -1,0 +1,106 @@
+[
+  {
+    "model_name": "Qwen3-8B-Q4_K_M",
+    "model_file": "Qwen3-8B-Q4_K_M.gguf",
+    "total_questions": 200,
+    "correct_status_count": 192,
+    "accuracy": 96.0,
+    "total_elapsed_seconds": 319.8,
+    "average_latency_ms": 1599.0,
+    "by_category": {
+      "answered": {
+        "total": 100,
+        "correct": 94,
+        "accuracy": 0.94
+      },
+      "out_of_scope": {
+        "total": 50,
+        "correct": 48,
+        "accuracy": 0.96
+      },
+      "escalated": {
+        "total": 50,
+        "correct": 50,
+        "accuracy": 1.0
+      }
+    }
+  },
+  {
+    "model_name": "Qwen3-4B-Instruct-2507-Q4_K_M",
+    "model_file": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+    "total_questions": 200,
+    "correct_status_count": 180,
+    "accuracy": 90.0,
+    "total_elapsed_seconds": 190.1,
+    "average_latency_ms": 950.5,
+    "by_category": {
+      "answered": {
+        "total": 100,
+        "correct": 84,
+        "accuracy": 0.84
+      },
+      "out_of_scope": {
+        "total": 50,
+        "correct": 49,
+        "accuracy": 0.98
+      },
+      "escalated": {
+        "total": 50,
+        "correct": 47,
+        "accuracy": 0.94
+      }
+    }
+  },
+  {
+    "model_name": "gemma-4-E4B-it-Q4_0",
+    "model_file": "gemma-4-E4B-it-Q4_0.gguf",
+    "total_questions": 200,
+    "correct_status_count": 108,
+    "accuracy": 54.0,
+    "total_elapsed_seconds": 789.0,
+    "average_latency_ms": 3945.0,
+    "by_category": {
+      "answered": {
+        "total": 100,
+        "correct": 11,
+        "accuracy": 0.11
+      },
+      "out_of_scope": {
+        "total": 50,
+        "correct": 50,
+        "accuracy": 1.0
+      },
+      "escalated": {
+        "total": 50,
+        "correct": 47,
+        "accuracy": 0.94
+      }
+    }
+  },
+  {
+    "model_name": "medgemma-4b-it-Q4_K_M",
+    "model_file": "medgemma-4b-it-Q4_K_M.gguf",
+    "total_questions": 200,
+    "correct_status_count": 187,
+    "accuracy": 93.5,
+    "total_elapsed_seconds": 275.3,
+    "average_latency_ms": 1376.5,
+    "by_category": {
+      "answered": {
+        "total": 100,
+        "correct": 98,
+        "accuracy": 0.98
+      },
+      "out_of_scope": {
+        "total": 50,
+        "correct": 42,
+        "accuracy": 0.84
+      },
+      "escalated": {
+        "total": 50,
+        "correct": 47,
+        "accuracy": 0.94
+      }
+    }
+  }
+]
