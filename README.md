@@ -1,5 +1,6 @@
 # MTI Medical Knowledge Assistant
 
+[![CI](https://github.com/Thealfyyy/MTI-Technical-Assesment---Medical-Chatbot/actions/workflows/ci.yml/badge.svg)](https://github.com/Thealfyyy/MTI-Technical-Assesment---Medical-Chatbot/actions/workflows/ci.yml)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi)](https://fastapi.tiangolo.com)
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?logo=python)](https://python.org)
 [![ChromaDB](https://img.shields.io/badge/ChromaDB-1.5.9-FF6F00)](https://www.trychroma.com)
